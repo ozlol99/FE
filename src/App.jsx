@@ -1,19 +1,18 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Layout from './Layouts/layout';
 
 function App() {
   return (
-    <BrowserRouter>
-      <nav>
-        {/* 라우팅 테스트용 */}
-        <Link to="/">Home</Link> | <Link to="/login">Login</Link>
-      </nav>
+    <>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+        </Route>
         <Route path="/login" element={<Login />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 
