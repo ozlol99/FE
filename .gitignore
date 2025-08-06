@@ -25,3 +25,8 @@ dist-ssr
 
 yarn.lock
 pnpm-lock.yaml
+
+
+# 환경 변수 파일
+.env
+.env.*
