@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 
-function Layout() {
+function Layout({ isLogin }) {
   return (
     <>
-      <NavBar />
+      <NavBar isLogin={isLogin} />
       <main>
         <Outlet />
       </main>
