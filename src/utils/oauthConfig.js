@@ -3,8 +3,7 @@ import kakaoLogo from '@/assets/kakao.svg';
 
 export const OAUTH_CONFIG = {
   google: {
-    client_id:
-      '439433135354-ubr0g0do3cg9c1u0uakuenulmq4q30m4.apps.googleusercontent.com',
+    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
     url: 'https://accounts.google.com/o/oauth2/v2/auth',
     color: 'bg-gray-900 hover:bg-black',
     logo: googleLogo,
@@ -16,7 +15,7 @@ export const OAUTH_CONFIG = {
     },
   },
   kakao: {
-    client_id: '3135c81f670ad77342b9a1018ac79843',
+    client_id: import.meta.env.VITE_KAKAO_CLIENT_ID,
     url: 'https://kauth.kakao.com/oauth/authorize',
     color: 'bg-gray-900 hover:bg-[#FEE500]',
     logo: kakaoLogo,
@@ -26,7 +25,7 @@ export const OAUTH_CONFIG = {
   },
 };
 
-export const REDIRECT_URI = 'http://localhost:5173/auth/callback';
+export const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 
 export function createOauthUrl(provider) {
   const { client_id, url, params } = OAUTH_CONFIG[provider];
