@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
+
+const MotionLink = motion.create(Link);
 
 function NavBarLinkStyle({ to, children }) {
   return (
@@ -18,9 +20,17 @@ function NavBarLinkStyle({ to, children }) {
         }}
         transition={{ duration: 0.3 }}
       />
-      <Link to={to} className="relative z-10">
+      <MotionLink
+        to={to}
+        className="relative z-10"
+        variants={{
+          rest: { y: 0 },
+          hover: { y: -15 },
+        }}
+        transition={{ duration: 0.3 }}
+      >
         {children}
-      </Link>
+      </MotionLink>
     </motion.div>
   );
 }
