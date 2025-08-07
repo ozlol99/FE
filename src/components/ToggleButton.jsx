@@ -5,14 +5,14 @@ function ToggleButton() {
 
   return (
     <>
-      <div className="w-[220px] h-[55px] bg-[#3f3f3f] rounded-md border border-[#787878] flex items-center justify-around px-4 text-white">
+      <div className="w-full h-[55px] bg-[#3f3f3f] rounded-md border border-[#787878] flex items-center justify-around px-2 text-white">
         {['남', '여'].map((gender, idx) => (
           <label
             key={gender}
             className={`relative flex-1 text-center cursor-pointer p-2 ${
               selectedGender === gender ? 'bg-[#313131]' : ''
             }
-            ${gender === '남' ? 'rounded-l-xl' : 'rounded-r-xl'}
+            ${gender === '남' ? 'rounded-l-md' : 'rounded-r-md'}
             `}
           >
             <input
