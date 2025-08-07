@@ -8,7 +8,7 @@ export default function CustomInput({
   ...props
 }) {
   return (
-    <div className="mb-4 w-full">
+    <div className="w-full">
       {label && (
         <label className="block mb-1 text-xs font-semibold text-[#b0b0b0]">
           {label}
