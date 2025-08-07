@@ -27,6 +27,7 @@ export default defineConfig([
     rules: {
       'react/react-in-jsx-scope': 'off', // React 17+ JSX Transform 대응
       'prettier/prettier': 'error', // Prettier 포맷 강제
+      'react/prop-types': 'off',
     },
   },
 ]);
