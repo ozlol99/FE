@@ -1,0 +1,32 @@
+export const gameModes = [
+  {
+    id: 1,
+    type: 'flex',
+    title: 'Flex',
+    subtitle: '자유랭크',
+    count: 7,
+    color: 'from-cyan-600 to-cyan-900',
+    icon: '',
+    image: '',
+  },
+  {
+    id: 2,
+    type: 'duo',
+    title: 'Duo',
+    subtitle: '듀오',
+    count: 8,
+    color: 'from-pink-600 to-pink-900',
+    icon: '',
+    image: '',
+  },
+  {
+    id: 3,
+    type: 'aram',
+    title: 'ARAM',
+    subtitle: '칼바람',
+    count: 9,
+    color: 'from-orange-600 to-orange-900',
+    icon: '',
+    image: '',
+  },
+];
