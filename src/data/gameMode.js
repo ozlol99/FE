@@ -1,9 +1,9 @@
-import AramIcon from '../assets/aramIcon.svg?react';
-import DuoIcon from '../assets/duoIcon.svg?react';
-import FlexIcon from '../assets/flexIcon.svg?react';
-import flexImg from '../assets/mainCardimg1.png';
-import duoImage from '../assets/mainCardimg2.png';
-import aramImage3 from '../assets/mainCardimg3.png';
+import AramIcon from '@/assets/aramIcon.svg?react';
+import DuoIcon from '@/assets/duoIcon.svg?react';
+import FlexIcon from '@/assets/flexIcon.svg?react';
+import flexImg from '@/assets/mainCardimg1.png';
+import duoImage from '@/assets/mainCardimg2.png';
+import aramImage3 from '@/assets/mainCardimg3.png';
 
 export const gameModes = [
   {

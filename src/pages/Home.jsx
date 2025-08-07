@@ -11,6 +11,7 @@ function Home() {
         <div className="flex w-full h-[120px] items-center justify-center">
           <MainSearchBar />
         </div>
+        <div></div>
       </div>
     </>
   );

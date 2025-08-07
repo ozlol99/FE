@@ -1,4 +1,4 @@
-import SearchIcon from '../assets/searchIcon.svg?react';
+import SearchIcon from '@/assets/searchIcon.svg?react';
 
 function MainSearchBar() {
   return (
