@@ -8,7 +8,9 @@ function Home() {
         <div className="w-full h-[420px] flex items-center justify-center">
           <GameModeList />
         </div>
-        <MainSearchBar />
+        <div className="flex w-full h-[120px] items-center justify-center">
+          <MainSearchBar />
+        </div>
       </div>
     </>
   );
