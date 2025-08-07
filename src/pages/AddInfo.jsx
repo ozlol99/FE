@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CustomInput from '@/components/CustomInput';
 import GenderToggle from '@/components/ToggleButton';
 
-const Form = ({ form, setForm, handleRiotTagChange }) => (
+const Form = ({ form, setForm }) => (
   <div className="flex items-center justify-center bg-[#181818] w-full">
     <form className="w-full max-w-[570px] flex flex-col gap-3 bg-[#232222] rounded-xl shadow-lg p-8">
       {/* 제목 */}
@@ -23,14 +23,16 @@ const Form = ({ form, setForm, handleRiotTagChange }) => (
         <CustomInput
           label="라이엇태그"
           value={form.riotTag}
-          onChange={handleRiotTagChange}
-          placeholder="예) GunySunny"
+          onChange={(e) => setForm((f) => ({ ...f, riotTag: e.target.value }))}
+          placeholder="라이엇태그를 입력해주세요"
           className="pr-14"
         />
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#b0b0b0] font-bold text-sm select-none pointer-events-none">
-          #KR
-        </span>
       </div>
+      {form.riotTag && !/^[a-zA-Z0-9가-힣]+#[0-9]{2,5}$/.test(form.riotTag) && (
+        <div className="text-red-500 text-xs">
+          올바른 라이엇태그를 입력하세요 (예: 알 아#뭘알아12)
+        </div>
+      )}
 
       {/* 생년월일 + 성별 한 줄 */}
       <div className="flex gap-3 items-center">
@@ -43,11 +45,16 @@ const Form = ({ form, setForm, handleRiotTagChange }) => (
             className="min-w-0"
           />
         </div>
-        <div className="flex-1 flex items-end justify-center">
-          <GenderToggle
-            value={form.gender}
-            onChange={(gender) => setForm((f) => ({ ...f, gender }))}
-          />
+        <div className="flex-1 flex flex-col items-start justify-center">
+          <label className="mb-1 text-xs font-semibold text-[#b0b0b0]">
+            성별
+          </label>
+          <div className="w-full flex justify-end">
+            <GenderToggle
+              value={form.gender}
+              onChange={(gender) => setForm((f) => ({ ...f, gender }))}
+            />
+          </div>
         </div>
       </div>
 
@@ -86,18 +93,9 @@ export default function AdditionalInfo() {
     agree: false,
   });
 
-  const handleRiotTagChange = (e) => {
-    let value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
-    setForm((prev) => ({ ...prev, riotTag: value }));
-  };
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#181818]">
-      <Form
-        form={form}
-        setForm={setForm}
-        handleRiotTagChange={handleRiotTagChange}
-      />
+      <Form form={form} setForm={setForm} />
     </div>
   );
 }
