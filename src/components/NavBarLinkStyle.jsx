@@ -6,7 +6,7 @@ const MotionLink = motion.create(Link);
 function NavBarLinkStyle({ to, children }) {
   return (
     <motion.div
-      className="relative flex items-end justify-center text-white w-[80px] pb-3 cursor-pointer"
+      className="relative flex items-end justify-center text-white w-[80px] pb-3 cursor-pointer overflow-hidden"
       initial="rest"
       whileHover="hover"
       animate="rest"
@@ -15,8 +15,8 @@ function NavBarLinkStyle({ to, children }) {
         className="absolute inset-0"
         style={{ background: 'linear-gradient(#363636, black)' }}
         variants={{
-          rest: { opacity: 0 },
-          hover: { opacity: 0.8 },
+          rest: { opacity: 0, y: 80 },
+          hover: { opacity: 0.8, y: 0 },
         }}
         transition={{ duration: 0.3 }}
       />
@@ -27,7 +27,7 @@ function NavBarLinkStyle({ to, children }) {
           rest: { y: 0 },
           hover: { y: -15 },
         }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.5 }}
       >
         {children}
       </MotionLink>
