@@ -1,6 +1,3 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
 import path, { dirname } from 'path';
 import svgr from 'vite-plugin-svgr';
 import { fileURLToPath } from 'url';
