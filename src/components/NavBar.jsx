@@ -1,5 +1,5 @@
 import NavBarLinkStyle from './NavBarLinkStyle';
-import Logo from '../assets/logo.svg?react';
+import Logo from '@/assets/logo.svg?react';
 import { useNavigate } from 'react-router-dom';
 
 function NavBar({ isLogin, onLogout }) {
