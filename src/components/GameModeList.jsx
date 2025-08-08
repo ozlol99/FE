@@ -3,7 +3,7 @@ import { gameModes } from '../data/gameMode';
 
 function GameModeList() {
   return (
-    <div className="flex justify-center gap-10">
+    <div className=" flex justify-center gap-10">
       {gameModes.map((mode) => (
         <MatchCard
           key={mode.id}
