@@ -3,6 +3,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Layout from './Layouts/layout';
 import { useState } from 'react';
+import OAuthCallback from './pages/OAuthCallback';
+import AddInfo from './pages/AddInfo';
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -14,6 +16,8 @@ function App() {
           <Route path="/" element={<Home />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/auth/callback" element={<OAuthCallback />} />
+        <Route path="/add-info" element={<AddInfo />} />
       </Routes>
     </>
   );
