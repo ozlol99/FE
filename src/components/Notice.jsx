@@ -22,7 +22,7 @@ function Notice() {
     <div className="flex justify-between w-4/5 h-[150px]">
       <NoticeBox
         title={'라이엇 공지사항'}
-        link={'https://www.riotgames.com/ko/news'}
+        link={'https://www.leagueoflegends.com/ko-kr/news/tags/patch-notes/'}
       />
       <NoticeBox title={'LOL99 공지사항'} link={''} />
     </div>
