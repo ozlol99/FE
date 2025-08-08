@@ -3,7 +3,7 @@ function MatchCard({ title, subtitle, imageSrc, Icon, color }) {
     <div className="group relative w-[390px] h-[250px] flex justify-center items-center hover:bg-stone-600 transition-colors duration-300 rounded-4xl">
       <div className=" relative w-[380px] h-[240px] overflow-hidden rounded-4xl flex">
         <div
-          className={`absolute left-[-16px] top-0 w-1/2 h-full -skew-x-10 origin-left bg-gradient-to-t ${color} z-10 group-hover:[transform:skewx(10deg)]  duration-300`}
+          className={`absolute left-[-16px] top-0 w-1/2 h-full -skew-x-10 origin-left bg-gradient-to-t ${color} z-10 group-hover:[transform:skewx(10deg)] duration-300`}
         ></div>
         <img
           src={imageSrc}
