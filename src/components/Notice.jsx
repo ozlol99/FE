@@ -1,9 +1,16 @@
-const NoticeBox = ({ title }) => {
+const NoticeBox = ({ title, link }) => {
   return (
-    <div className="w-3/7">
+    <div className="basis-[48%] min-w-[420px] max-w-[560px] flex-shrink-0">
       <div className="flex justify-between items-center p-3">
         <h1 className="font-bold text-white">{title}</h1>
-        <p className="text-sm font-medium text-white"> 더보기 {'>'}</p>
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline text-white text-sm"
+        >
+          더보기 {'>'}
+        </a>
       </div>
       <div className="flex w-full h-full border-2 border-stone-500 rounded-2xl"></div>
     </div>
@@ -12,9 +19,12 @@ const NoticeBox = ({ title }) => {
 
 function Notice() {
   return (
-    <div className="flex justify-between w-4/5 h-[150px] flex-wrap ">
-      <NoticeBox title={'라이엇 공지사항'} />
-      <NoticeBox title={'LOL99 공지사항'} />
+    <div className="flex justify-between w-4/5 h-[150px]">
+      <NoticeBox
+        title={'라이엇 공지사항'}
+        link={'https://www.riotgames.com/ko/news'}
+      />
+      <NoticeBox title={'LOL99 공지사항'} link={''} />
     </div>
   );
 }
