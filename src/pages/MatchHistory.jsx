@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import UserProfile from '../components/UserProfile';
 
 function MatchHistorych() {
   // const { userId } = useParams();
@@ -12,6 +13,10 @@ function MatchHistorych() {
     console.log(`${name}#${tag}`);
   }, []);
 
-  return <>히스토리 페이지 입니다.</>;
+  return (
+    <div>
+      <UserProfile />
+    </div>
+  );
 }
 export default MatchHistorych;
