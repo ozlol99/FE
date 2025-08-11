@@ -1,5 +1,6 @@
 import NavBarLinkStyle from './NavBarLinkStyle';
 import Logo from '@/assets/logo.svg?react';
+import SymbolLogo from '@/assets/lol99logo.svg?react';
 import { useNavigate } from 'react-router-dom';
 
 function NavBar({ isLogin, onLogout }) {
@@ -13,7 +14,17 @@ function NavBar({ isLogin, onLogout }) {
   return (
     <div className="w-screen h-[90px] bg-[#232323] text-white flex items-center px-6">
       <div className="flex items-center justify-center text-white font-bold text-2xl h-full w-[100px] pr-6">
-        <Logo className="cursor-pointer" onClick={() => navigate('/')} />
+        <SymbolLogo
+          className="w-40 h-40 spin-slow"
+          style={{
+            '--start': '#00BBA3',
+            '--end': '#0c5748',
+          }}
+        />
+        <Logo
+          className=" w-40 h-40 cursor-pointer"
+          onClick={() => navigate('/')}
+        />
       </div>
       <div className=" flex h-full">
         {navItems.map((item, index) => (
