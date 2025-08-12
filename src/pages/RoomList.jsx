@@ -64,8 +64,7 @@ export default function RoomList({
         <div className="rounded-2xl border border-[#2b3240] bg-[#0f141b] p-4 overflow-hidden">
           {/* 그리드 패턴 배경 */}
           <div className="rounded-xl p-4 min-h-[40vh]">
-            {/* ↓ 시각 확인용 스켈레톤(예시). 카드 나오면 삭제/교체하세요 */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-5">
               <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
               <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
               <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
