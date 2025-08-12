@@ -11,3 +11,9 @@ export const positionIcons = {
   BOTTOM: BotIcon,
   UTILITY: SupportIcon,
 };
+
+// 안전하게 아이콘 가져오는 함수
+export function getPositionIcon(position) {
+  const key = String(position || '').toUpperCase();
+  return positionIcons[key] || null;
+}
