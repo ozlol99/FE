@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import Fab from '@/components/Fab';
+import RoomsGridSection from '@/components/RoomsGridSection';
+import TabOptions from '@/components/TabOptions';
 
 const DEFAULT_QUEUES = [
   { key: 'all', label: '전체' },
@@ -14,85 +17,56 @@ export default function RoomList({
   queues,
 }) {
   const items = queues?.length ? queues : DEFAULT_QUEUES;
+
+  // - selectedQueue prop이 없을 때만 내부 상태로 탭을 관리
+  // - 초기값은 items[0]의 key 또는 'all'
   const [internal, setInternal] = useState(items[0]?.key ?? 'all');
+
+  // 현재 활성 탭 값(active)
+  // - selectedQueue가 주어지면(컨트롤드) 그 값을 우선 사용
+  // - 아니면 내부 상태(internal)를 사용
   const active = selectedQueue ?? internal;
 
   const setActive = (key) =>
     onChangeQueue ? onChangeQueue(key) : setInternal(key);
 
-  // const onKeyDown = (e) => {
-  //   if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
-  //   const next = e.key === "ArrowRight"
-  //     ? items[(index + 1) % items.length]
-  //     : items[(index - 1 + items.length) % items.length];
-  //   setActive(next.key);
-  // };
+  // 배열에서 랜덤값 하나 뽑기(더미 데이터용)
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  // 더미 방
+  const [rooms] = useState(() =>
+    Array.from({ length: 12 }).map((_, i) => ({
+      id: String(i + 1), // 방 고유 ID
+      title: i % 2 ? '같이 하실분' : '원딜/서폿 구해요', // 방 제목
+      queue: pick(['solo', 'flex', 'aram']), // 큐 타입(솔로/자유/칼바람)
+      members: 1 + (i % 4), // 현재 인원(1~4)
+      capacity: 5, // 최대 인원
+      tags: ['실버', '골드', '사람']
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3), // 해시태그 3개
+      discord: pick(['green', 'yellow']), // 디스코드 상태(더미)
+      mic: pick(['on', 'off', 'no']), // 마이크 상태(더미)
+      createdAt: Date.now() - pick([5, 12, 30, 45, 90, 180]) * 60 * 1000, // 생성 시간(몇 분 전)
+      host: i % 2 ? '닉네임' : 'CaptainLee', // 방장 닉네임
+    })),
+  );
+  const visibleRooms =
+    active === 'all' ? rooms : rooms.filter((r) => r.queue === active);
 
   return (
     <div className="min-h-dvh bg-[#0f1115] text-[#eaeaea]">
-      <div className="mx-auto w-full max-w-[90%] px-4 pt-20">
-        <div className="overflow-x-auto">
-          <div className="inline-flex rounded-full border border-[#2b3240] bg-[#1a1f29] shadow-inner">
-            {items.map((q, i) => {
-              const isActive = active === q.key;
-              return (
-                <button
-                  key={q.key}
-                  type="button"
-                  onClick={() => setActive(q.key)}
-                  className={[
-                    'px-4 py-2 text-sm font-medium whitespace-nowrap select-none transition',
-                    'first:rounded-l-full last:rounded-r-full',
-                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BBA3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f1115]',
-                    i > 0 ? 'border-l border-[#2b3240]' : '',
-                    isActive
-                      ? 'bg-[#00BBA3] text-[#0b0f14]'
-                      : 'text-slate-300 hover:bg-[#232a36]',
-                  ].join(' ')}
-                  aria-pressed={isActive}
-                >
-                  {q.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <TabOptions items={items} value={active} onChange={setActive} />
 
-      {/* (카드/리스트 영역은 이후 컴포넌트에서 구현 예정) */}
-      <div className="mx-auto w-full max-w-[80%] px-4 py-8">
-        <div className="rounded-2xl border border-[#2b3240] bg-[#0f141b] p-4 overflow-hidden">
-          {/* 그리드 패턴 배경 */}
-          <div className="rounded-xl p-4 min-h-[40vh]">
-            <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-5">
-              <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
-              <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
-              <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
-              <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
-              <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
-              <div className="h-24 rounded-lg border border-dashed border-[#3a4252] bg-black/10" />
-            </div>
-            {/* ↑ 여기까지 예시 */}
-          </div>
-        </div>
-      </div>
+      {/* 방 리스트 그리드 */}
+      <RoomsGridSection
+        rooms={visibleRooms}
+        onClick={(id) => console.log('open room', id)}
+        onJoin={(id) => console.log('join room', id)}
+        // gridCols="sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5"  // 필요시 변경
+      />
 
       {/* 플로팅 + 버튼 */}
-      <button
-        type="button"
-        aria-label="방 만들기"
-        onClick={onCreateRoom}
-        className="fixed bottom-6 right-6 grid h-14 w-14 place-items-center rounded-full border border-[#2b3240] bg-[#22d3ee] text-[#0b0f14] shadow-lg transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 cursor-pointer"
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M12 5v14M5 12h14"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-          />
-        </svg>
-      </button>
+      <Fab onClick={onCreateRoom} ariaLabel="방 만들기" />
     </div>
   );
 }
