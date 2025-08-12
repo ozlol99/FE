@@ -57,3 +57,42 @@ export async function getLeagueByPuuid(puuid) {
     throw error;
   }
 }
+
+// 최근 매치 ID 목록 //
+export async function getRecentMatchIds(puuid, count = 2) {
+  // 주의: 경로에 riot-asia 같은 prefix 없음
+  const url = `${ASIA_URL}/lol/match/v5/matches/by-puuid/${encodeURIComponent(puuid)}/ids?start=0&count=${count}`;
+  try {
+    const { data } = await axios.get(url, {
+      headers: { 'X-Riot-Token': RIOT_API_KEY },
+    });
+    // data: [ "KR_...", "KR_...", ... ]
+    console.log('match id:', data);
+    return data;
+  } catch (error) {
+    console.error(
+      `Riot API 실패 (Match IDs - PUUID: ${puuid}):`,
+      error.response?.data || error.message,
+    );
+    throw error;
+  }
+}
+
+// 매치 ID로 상세 가져오기 //
+export async function getMatchById(matchId) {
+  const url = `${ASIA_URL}/lol/match/v5/matches/${encodeURIComponent(matchId)}`;
+  try {
+    const { data } = await axios.get(url, {
+      headers: { 'X-Riot-Token': RIOT_API_KEY },
+    });
+    // data: { metadata: { matchId, participants: [...] }, info: { participants: [...], ... } }
+    console.log('metadata:', data);
+    return data;
+  } catch (error) {
+    console.error(
+      `Riot API 실패 (Match - ID: ${matchId}):`,
+      error.response?.data || error.message,
+    );
+    throw error;
+  }
+}
