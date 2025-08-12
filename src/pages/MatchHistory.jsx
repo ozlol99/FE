@@ -14,8 +14,8 @@ function MatchHistorych() {
   // const { userId } = useParams();
   // const [name, tag] = userId.split('-');
 
-  const name = '이상호93';
-  const tag = 'KR1';
+  const name = '산책못간나피리';
+  const tag = 'KR11';
 
   // const [isLoding, setIsLoading] = useState(true);
   const [account, setAccount] = useState(null);
@@ -52,7 +52,7 @@ function MatchHistorych() {
         setRank(rankData);
 
         // 2) 최근 매치 ID들
-        const ids = await getRecentMatchIds(accountData.puuid, 5);
+        const ids = await getRecentMatchIds(accountData.puuid, 20);
 
         // 3) 상세 매치 정보 병렬 호출 (실패는 건너뛰기)
         const infos = await Promise.all(
