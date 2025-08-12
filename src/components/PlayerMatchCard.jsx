@@ -24,7 +24,7 @@ function PlayerMatchCard({ match, puuid }) {
   const isLose = winFlag === false && !isRemake;
 
   const base =
-    'relative flex w-full rounded-r-xl p-2 md:p-2 pl-4 min-h-[110px] md:pl-5';
+    'relative flex w-full rounded-r-xl p-2 md:p-2 pl-4 min-h-[110px] md:pl-5 text-white';
   let stateClass = '';
   if (isWin) {
     stateClass =

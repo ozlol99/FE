@@ -74,7 +74,7 @@ function MatchHistorych() {
   return (
     <div>
       <UserProfile summoner={summoner} account={account} rank={rank} />\{' '}
-      <div className="summonersContainer grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)] gap-4 mt-4 items-start">
+      <div className="summonersContainer grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-4 mt-4 items-start">
         <div className="rounded-lg p-3 self-start">
           <PlayerInfo summoner={summoner} account={account} rank={rank} />
         </div>
