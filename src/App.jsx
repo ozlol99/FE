@@ -4,9 +4,10 @@ import Login from './pages/Login';
 import Layout from './layouts/Layout.jsx';
 import { useState } from 'react';
 import OAuthCallback from './pages/OAuthCallback';
-import AddInfo from './pages/AddInfo';
 import MatchHistorych from './pages/MatchHistory';
 import MyPage from './pages/MyPage';
+import AdditionalInfo from './pages/AdditionalInfo';
+import RoomList from './pages/RoomList';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -20,8 +21,9 @@ function App() {
         {/*http://localhost:5173/match-detail 으로 임시 접속*/}
 
         <Route path="/match-detail" element={<MatchHistorych />} />
-        <Route path="/add-info" element={<AddInfo />} />
+        <Route path="/add-info" element={<AdditionalInfo />} />
         <Route path="/auth/callback" element={<OAuthCallback />} />
+        <Route path="/rooms" element={<RoomList />} />
       </Route>
       <Route path="/login" element={<Login />} />
     </Routes>
