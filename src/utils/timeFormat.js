@@ -1,3 +1,4 @@
+// 과거 매치 현시점으로 부터 시간 계산
 export function timeAgoTimestamp(timestamp) {
   if (!timestamp) return '';
 
@@ -16,6 +17,7 @@ export function timeAgoTimestamp(timestamp) {
   return date.toLocaleDateString('ko-KR');
 }
 
+// 한 매치의 게임 순수 시간
 export function formatGameDuration(seconds) {
   if (!seconds) return '';
   const mins = Math.floor(seconds / 60);

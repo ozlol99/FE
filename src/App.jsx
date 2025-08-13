@@ -9,6 +9,7 @@ import MatchHistorych from './pages/MatchHistory';
 import MyPage from './pages/MyPage';
 import AdditionalInfo from './pages/AdditionalInfo';
 import RoomList from './pages/RoomList';
+import Champions from './pages/Champions.jsx';
 
 import SocketProvider from '@/context/SocketProvider'; // ✅ 추가
 
@@ -37,6 +38,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="rooms" element={<RoomList />} />
           <Route path="match-detail" element={<MatchHistorych />} />
+           <Route path="/champions" element={<Champions />} />
           <Route path="add-info" element={<AdditionalInfo />} />
           <Route path="mypage" element={<RequireAuth isLogin={isLogin}> <MyPage /> </RequireAuth>} />
         </Route>
