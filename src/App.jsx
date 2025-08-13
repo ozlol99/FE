@@ -8,6 +8,7 @@ import MatchHistorych from './pages/MatchHistory';
 import MyPage from './pages/MyPage';
 import AdditionalInfo from './pages/AdditionalInfo';
 import RoomList from './pages/RoomList';
+import Champions from './pages/Champions.jsx';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -17,10 +18,9 @@ function App() {
       <Route element={<Layout isLogin={isLogin} setIsLogin={setIsLogin} />}>
         <Route path="/" element={<Home />} />
         <Route path="/mypage" element={<MyPage />} />
-        {/*검색기능 미구현으로 인해 임시 라우터 경로 설정*/}
-        {/*http://localhost:5173/match-detail 으로 임시 접속*/}
 
         <Route path="/match-detail/:name/:tag" element={<MatchHistorych />} />
+        <Route path="/champions" element={<Champions />} />
         <Route path="/add-info" element={<AdditionalInfo />} />
         <Route path="/auth/callback" element={<OAuthCallback />} />
         <Route path="/rooms" element={<RoomList />} />
