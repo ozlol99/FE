@@ -72,18 +72,23 @@ function MatchHistorych() {
   }, [name, tag]);
 
   return (
-    <div>
-      <UserProfile summoner={summoner} account={account} rank={rank} />\{' '}
-      <div className="summonersContainer grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-4 mt-4 items-start">
-        <div className="rounded-lg p-3 self-start">
-          <PlayerInfo summoner={summoner} account={account} rank={rank} />
-        </div>
+    <div className="flex justify-center flex-col items-center ">
+      <div className="max-w-[1440px] ">
+        <UserProfile summoner={summoner} account={account} rank={rank} />\{' '}
+        <div className="summonersContainer grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-4 mt-4 items-start">
+          <div className="rounded-lg p-3 self-start">
+            <PlayerInfo summoner={summoner} account={account} rank={rank} />
+          </div>
 
-        {/* 오른쪽: 매치 카드 리스트 */}
-        <div className="min-h-screen">
-          {summoner?.puuid && (
-            <PlayerMatchInfo matchesInfo={matchesInfo} puuid={summoner.puuid} />
-          )}
+          {/* 오른쪽: 매치 카드 리스트 */}
+          <div className="min-h-screen">
+            {summoner?.puuid && (
+              <PlayerMatchInfo
+                matchesInfo={matchesInfo}
+                puuid={summoner.puuid}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
