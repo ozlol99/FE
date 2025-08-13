@@ -1,7 +1,8 @@
 import NavBarLinkStyle from './NavBarLinkStyle';
 import Logo from '@/assets/logo.svg?react';
 import SymbolLogo from '@/assets/lol99logo.svg?react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import NavSearchBar from './NavSearchBar';
 
 function NavBar({ isLogin, onLogout }) {
   const navItems = [
@@ -10,6 +11,9 @@ function NavBar({ isLogin, onLogout }) {
     { label: '챔피언', path: '/' },
   ];
   const navigate = useNavigate();
+  //주소 가져오기
+  const { pathname } = useLocation();
+  const showSearch = pathname !== '/';
 
   return (
     <div className="w-screen h-[90px] bg-[#232323] text-white flex items-center px-6">
@@ -32,6 +36,9 @@ function NavBar({ isLogin, onLogout }) {
             {item.label}
           </NavBarLinkStyle>
         ))}
+      </div>
+      <div className="flex-1 flex justify-center">
+        {showSearch && <NavSearchBar />}
       </div>
       <div className="flex h-full ml-auto gap-2">
         {' '}

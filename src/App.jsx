@@ -20,7 +20,7 @@ function App() {
         {/*검색기능 미구현으로 인해 임시 라우터 경로 설정*/}
         {/*http://localhost:5173/match-detail 으로 임시 접속*/}
 
-        <Route path="/match-detail" element={<MatchHistorych />} />
+        <Route path="/match-detail/:name/:tag" element={<MatchHistorych />} />
         <Route path="/add-info" element={<AdditionalInfo />} />
         <Route path="/auth/callback" element={<OAuthCallback />} />
         <Route path="/rooms" element={<RoomList />} />

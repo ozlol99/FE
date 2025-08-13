@@ -1,8 +1,8 @@
 function UserProfile({ summoner, account }) {
   const profileIconUrl = `https://ddragon.leagueoflegends.com/cdn/14.15.1/img/profileicon/${summoner?.profileIconId}.png`;
   return (
-    <div className="flex h-[270px] w-full bg-[#7d7d7d] p-3.5 justify-center">
-      <div className="flex flex-1 w-full max-w-4x gap-4">
+    <div className="flex h-[270px] w-full p-3.5 justify-center">
+      <div className="flex flex-1 w-full bg-[#7d7d7d] max-w-4x gap-4">
         <div className="flex text-sm text-gray-900 w-full sm:w-3/4 md:3/4 p-2.5 gap-3 bg-">
           <div className="flex flex-col">
             {/* 이미지 컨테이너 */}
