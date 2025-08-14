@@ -37,10 +37,18 @@ function App() {
         <Route element={<Layout isLogin={isLogin} setIsLogin={setIsLogin} />}>
           <Route index element={<Home />} />
           <Route path="rooms" element={<RoomList />} />
-          <Route path="match-detail" element={<MatchHistorych />} />
-           <Route path="/champions" element={<Champions />} />
+          <Route path="match-detail/:name/:tag" element={<MatchHistorych />} />
+          <Route path="/champions" element={<Champions />} />
           <Route path="add-info" element={<AdditionalInfo />} />
-          <Route path="mypage" element={<RequireAuth isLogin={isLogin}> <MyPage /> </RequireAuth>} />
+          <Route
+            path="mypage"
+            element={
+              <RequireAuth isLogin={isLogin}>
+                {' '}
+                <MyPage />{' '}
+              </RequireAuth>
+            }
+          />
         </Route>
 
         {/* 레이아웃 없이 단독 렌더 */}
