@@ -9,12 +9,11 @@ export const positionIcons = {
   ALL: AllIcon,
   TOP: TopIcon,
   JUNGLE: JungleIcon,
-  MIDDLE: MidIcon,
+  MID: MidIcon,
   BOTTOM: BotIcon,
-  UTILITY: SupportIcon,
+  SUPPORT: SupportIcon,
 };
 
-// 안전하게 아이콘 가져오는 함수
 export function getPositionIcon(position) {
   const key = String(position || '').toUpperCase();
   return positionIcons[key] || null;
