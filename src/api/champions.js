@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const DDRAGON_VER = '14.16.1';
 export const DDRAGON_BASE = 'https://ddragon.leagueoflegends.com/cdn';
+
 const CHAMPIONS_URL = `${DDRAGON_BASE}/${DDRAGON_VER}/data/ko_KR/champion.json`;
 
 export async function fetchChampionList() {
@@ -17,4 +18,11 @@ export async function fetchChampionList() {
     console.error('챔피언 목록 요청 실패 : ', error);
     throw error;
   }
+}
+
+export async function fetchChampionDetail(id) {
+  const { data } = await axios.get(
+    `${DDRAGON_BASE}/${DDRAGON_VER}/data/ko_KR/champion/${id}.json`,
+  );
+  return data.data[id];
 }
