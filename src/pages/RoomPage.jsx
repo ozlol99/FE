@@ -27,7 +27,7 @@ export default function RoomPage() {
       losses: 608,
       rate: 50,
       likes: 0,
-      initial: 'P',
+      profile: 'P',
     },
     {
       id: 2,
@@ -37,7 +37,7 @@ export default function RoomPage() {
       losses: 608,
       rate: 50,
       likes: 0,
-      initial: 'P',
+      profile: 'P',
     },
     {
       id: 3,
@@ -47,7 +47,7 @@ export default function RoomPage() {
       losses: 608,
       rate: 50,
       likes: 0,
-      initial: 'P',
+      profile: 'P',
     },
     {
       id: 4,
@@ -57,7 +57,7 @@ export default function RoomPage() {
       losses: 608,
       rate: 50,
       likes: 0,
-      initial: 'P',
+      profile: 'P',
     },
   ]);
 

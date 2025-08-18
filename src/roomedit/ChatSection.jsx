@@ -1,12 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import Chat from '@/chat/Chat';
-import { IconSettings, IconSend, IconEdit, IconCheck, IconX } from '@/icons'; // 아이콘 따로 빼면 더 깔끔해짐
+import { IconSettings, IconSend, IconEdit, IconCheck, IconX } from '@/icons';
 
-export default function ChatSection({ title, setTitle }) {
+export default function ChatSection({ title, setTitle, roomId, token }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState(title);
   const titleInputRef = useRef(null);
 
+  /* --- 채팅 메시지 --- */
+  const [messages, setMessages] = useState([
+    { id: 's1', system: true, text: '방이 생성되었습니다', time: '' },
+  ]);
+  const [input, setInput] = useState('');
+  const listRef = useRef(null);
+  const wsRef = useRef(null); // 웹소켓 ref
+
+  /* --- 제목 편집 --- */
   useEffect(() => {
     if (isEditingTitle && titleInputRef.current) {
       titleInputRef.current.focus();
@@ -41,22 +50,89 @@ export default function ChatSection({ title, setTitle }) {
     }
   };
 
-  /* --- 채팅 메시지 --- */
-  const [messages, setMessages] = useState([
-    { id: 's1', system: true, text: '방이 생성되었습니다', time: '' },
-    { id: 1, mine: false, text: '같이 하실 분 구해요!', time: '10:25' },
-  ]);
-  const [input, setInput] = useState('');
-  const listRef = useRef(null);
-
+  /* --- 메시지 스크롤 유지 --- */
   useEffect(() => {
-    if (listRef.current)
+    if (listRef.current) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
   }, [messages]);
 
+  /* --- WebSocket 연결 --- */
+  useEffect(() => {
+    if (!roomId || !token) return;
+
+    const ws = new WebSocket(
+      `ws://localhost:3001/chat/ws/${roomId}?token=${token}`,
+    );
+
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      console.log('✅ WebSocket 연결 성공');
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log('📩 받은 데이터:', data);
+
+      if (data.type === 'chat_message') {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            mine: false,
+            text: data.content,
+            time: new Date().toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+          },
+        ]);
+      }
+
+      if (data.type === 'user_join') {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `join-${data.user_id}`,
+            system: true,
+            text: `${data.username}님이 입장하였습니다.`,
+            time: '',
+          },
+        ]);
+      }
+
+      if (data.type === 'user_leave') {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `leave-${data.user_id}`,
+            system: true,
+            text: `${data.username}님이 퇴장하였습니다.`,
+            time: '',
+          },
+        ]);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('❌ WebSocket 연결 종료');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [roomId, token]);
+
+  /* --- 메시지 전송 --- */
   const send = () => {
     const text = input.trim();
-    if (!text) return;
+    if (!text || !wsRef.current) return;
+
+    // 서버에 전송
+    wsRef.current.send(text);
+
+    // 내 메시지는 바로 추가
     setMessages((prev) => [
       ...prev,
       {
@@ -69,6 +145,7 @@ export default function ChatSection({ title, setTitle }) {
         }),
       },
     ]);
+
     setInput('');
   };
 

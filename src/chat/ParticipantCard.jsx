@@ -26,7 +26,7 @@ export default function ParticipantCard({ member, onRemove, onAddLike }) {
 
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#383838] text-xs text-[#cfcfcf]">
-          {member.initial || 'P'}
+          {member.profile || 'P'}
         </div>
 
         <div className="flex-1 min-w-0">
