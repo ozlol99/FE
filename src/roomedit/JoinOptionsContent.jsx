@@ -1,11 +1,6 @@
 import Switch from './Switch';
 
-/**
- * 순수 UI 컴포넌트 (상태 없음)
- * - 필요한 값/이벤트를 모두 props로 받아 렌더만 담당
- */
 export default function JoinOptionsContent({
-  // 헤더
   asModal,
   titleText,
   onClose,
@@ -38,16 +33,47 @@ export default function JoinOptionsContent({
   lookingPos,
   toggleLooking,
 
-  // 호스트/락 관련 (추가)
+  // 호스트/락 관련
   isHost = false,
-  locks = {}, // { title, queue, looking, options }
-  capacity, // number
-  onChangeCapacity, // (n:number) => void
+  locks = {},
+  capacity,
+  onChangeCapacity,
   capacityOptions = [2, 3, 4, 5],
 
   // 제출
   onSubmit,
 }) {
+  // 🔹 title에서 태그 분리 함수
+  const extractTags = (text) => {
+    const regex = /#(\S+)/g;
+    const found = [];
+    let match;
+    while ((match = regex.exec(text))) {
+      found.push(match[1]);
+    }
+    return found;
+  };
+
+  // 🔹 등록 시 처리
+  const handleSubmit = () => {
+    const tags = extractTags(title);
+    const cleanTitle = title.replace(/#\S+/g, '').trim();
+
+    const payload = {
+      title: cleanTitle,
+      tags: tags,
+      queue,
+      discord,
+      mic,
+      listenOnly,
+      myPos: Array.from(myPos),
+      lookingPos: Array.from(lookingPos ?? []),
+      capacity,
+    };
+
+    onSubmit(payload);
+  };
+
   const isLocked = (k) => Boolean(locks?.[k]);
   const clsLocked = 'opacity-50 cursor-not-allowed pointer-events-none';
   const clsField =
@@ -95,10 +121,11 @@ export default function JoinOptionsContent({
           </div>
 
           <div className="md:col-span-8 lg:col-span-9">
+            {/* 방 제목 + 태그 함께 입력 */}
             <input
               value={title}
               onChange={(e) => (isLocked('title') ? null : onChangeTitle(e))}
-              placeholder="함께할 듀오 파트너를 찾고 있어요."
+              placeholder="예: #골드 #정글 같이 할 분?"
               className={`${clsField} ${isLocked('title') ? clsLocked : ''}`}
               aria-disabled={isLocked('title')}
             />
@@ -167,7 +194,7 @@ export default function JoinOptionsContent({
         </div>
 
         {/* 옵션 스위치 */}
-        <div className="md:col-span-2 lg:col-span-3">
+        <div className="md:col-span-4 lg:col-span-5">
           <div
             className={[
               'space-y-1.5 p-2 text-xs rounded-md',
@@ -228,7 +255,7 @@ export default function JoinOptionsContent({
         </div>
       </div>
 
-      {/* (추가) 호스트 전용: 최대 인원 수 — '찾는 포지션' 바로 아래 */}
+      {/* (추가) 호스트 전용: 최대 인원 수 */}
       {isHost && (
         <div className="mt-4">
           <div className="mb-2 text-sm text-[#b9c2d0]">최대 인원 수</div>
@@ -267,7 +294,7 @@ export default function JoinOptionsContent({
       <div>
         <button
           type="button"
-          onClick={onSubmit}
+          onClick={handleSubmit}
           className="w-full rounded-lg bg-[#00BBA3] px-4 py-3 text-sm font-semibold text-[#0b0f14] hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008f7c]"
         >
           등록
