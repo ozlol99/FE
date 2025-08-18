@@ -12,6 +12,7 @@ import RoomList from './pages/RoomList';
 import Champions from './pages/Champions.jsx';
 
 import SocketProvider from '@/context/SocketProvider'; // ✅ 추가
+import RoomPage from './pages/RoomPage.jsx';
 
 // 간단한 보호 라우트 (로그인 필요 페이지용)
 function RequireAuth({ isLogin, children }) {
@@ -53,6 +54,7 @@ function App() {
 
         {/* 레이아웃 없이 단독 렌더 */}
         <Route path="/login" element={<Login />} />
+        <Route path="room" element={<RoomPage />} />
         <Route path="/auth/callback" element={<OAuthCallback />} />
       </Routes>
     </SocketProvider>
