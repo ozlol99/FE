@@ -13,6 +13,7 @@ import Champions from './pages/Champions.jsx';
 
 import SocketProvider from '@/context/SocketProvider'; // ✅ 추가
 import RoomPage from './pages/RoomPage.jsx';
+import LeaderBoard from './pages/LeaderBoard.jsx';
 
 // 간단한 보호 라우트 (로그인 필요 페이지용)
 function RequireAuth({ isLogin, children }) {
@@ -41,6 +42,7 @@ function App() {
           <Route path="match-detail/:name/:tag" element={<MatchHistorych />} />
           <Route path="/champions" element={<Champions />} />
           <Route path="add-info" element={<AdditionalInfo />} />
+          <Route path="/leaderboard" element={<LeaderBoard />} />
           <Route
             path="mypage"
             element={

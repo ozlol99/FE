@@ -7,7 +7,7 @@ import NavSearchBar from './NavSearchBar';
 function NavBar({ isLogin, onLogout }) {
   const navItems = [
     { label: '팀원 찾기', path: '/' },
-    { label: '랭킹', path: '/' },
+    { label: '랭킹', path: '/leaderboard' },
     { label: '챔피언', path: '/champions' },
   ];
   const navigate = useNavigate();
