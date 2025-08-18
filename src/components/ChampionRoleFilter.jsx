@@ -14,7 +14,8 @@ export default function ChampionRoleFilter({ value = 'ALL', onChange }) {
             type="button"
             onClick={() => onChange?.(role)}
             className={`h-10 rounded-md border-2 flex items-center justify-center border-neutral-700
-            ${active ? 'bg-teal-500' : ''}`}
+            ${active ? 'bg-teal-500' : ''}
+            first:rounded-l-xl last:rounded-r-xl`}
           >
             {Icon && <Icon className="w-5 h-5 fill-amber-50" />}
           </button>

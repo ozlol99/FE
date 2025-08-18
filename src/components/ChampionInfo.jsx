@@ -1,37 +1,166 @@
-function ChampionInfo() {
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { fetchChampionDetail } from '../api/champions';
+import { passiveIconUrl, spellIconUrl } from '../data/ddragonUrls';
+import SkinCarousel from './SkinCarousel';
+
+const STATUS = {
+  IDLE: 'idle',
+  LOADING: 'loading',
+  SUCCESS: 'success',
+  ERROR: 'error',
+};
+
+function ChampionInfo({ championId }) {
+  const [detail, setDetail] = useState(null);
+  const [status, setStatus] = useState(STATUS.IDLE);
+  const [skinIndex, setSkinIndex] = useState(0);
+  const topRef = useRef(null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false; // 언마운트시 false
+    };
+  }, []);
+
+  const loadDetail = useCallback(async () => {
+    if (!championId) {
+      setDetail(null);
+      setStatus(STATUS.IDLE);
+      return;
+    }
+    if (status === STATUS.SUCCESS && detail?.id === championId) return;
+    setStatus(STATUS.LOADING);
+    try {
+      const data = await fetchChampionDetail(championId);
+      if (!isMountedRef.current) return;
+
+      setDetail(data);
+      setSkinIndex(0);
+      setStatus(STATUS.SUCCESS);
+    } catch (error) {
+      console.error(error);
+      if (!isMountedRef.current) return;
+      setStatus(STATUS.ERROR);
+    }
+  }, [championId]);
+  useEffect(() => {
+    loadDetail();
+  }, [loadDetail]);
+
+  // 스크롤 이벤트
+  useEffect(() => {
+    if (status === STATUS.SUCCESS && topRef.current) {
+      topRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
+    }
+  }, [status]);
+
+  const {
+    id,
+    name,
+    lore = '',
+    skins = [],
+    passive,
+    spells = [],
+  } = detail ?? {};
+
+  if (!championId) {
+    return (
+      <section className="flex-1 p-6 text-center text-gray-400">
+        챔피언을 선택해 주세요.
+      </section>
+    );
+  }
+
+  if (status === STATUS.LOADING) {
+    return (
+      <section className="flex-1 p-6">
+        <div className="h-screen rounded-xl bg-white/10 animate-pulse"></div>
+      </section>
+    );
+  }
+
+  if (status === STATUS.ERROR) {
+    return (
+      <section className="flex-1 p-6 text-center">
+        <div className="text-rose-300 mb-3">데이터를 불러오지 못했습니다.</div>
+        <button
+          className="px-3 py-2 rounded bg-teal-600 text-white"
+          onClick={loadDetail}
+        >
+          다시 시도
+        </button>
+      </section>
+    );
+  }
+
   return (
-    <section className=" w-full md:flex-1 flex-1 bg-red-800">
-      <div className="w-full  bg-emerald-600">
-        <div className="w-full bg-indigo-400 h-[600px]">
-          챔피언 정보
-          <div>갈리오 이미지 안에 택스트 넣기</div>
-          <div>
-            아스라한 빛의 도시 데마시아의 성문 밖, 거대한 석상 갈리오가 경계의
-            눈을 늦추지 않고 서 있다. 마법사의 공격으로부터 데마시아를 수호하기
-            위해 만들어진 갈리오는 강력한 마법의 힘이 그를 깨울 때까지 수십 년,
-            때로는 수백 년 동안 한자리에 미동도 없이 서있다. 일단 깨어나면
-            전투의 아찔한 스릴과 데마시아인들을 구한다는 자부심을 음미하며 1분
-            1초도 허투루 쓰는 법이 없다. 그러나 그가 쟁취한 승리의 향기는 결코
-            달콤하지만은 않다. 아이러니하게도 그가 물리친 마법의 힘이 그에게
-            생명을 준 원천이기에 전쟁을 승리로 장식한 후에는 다시 깊은 잠으로
-            빠져든다.
-          </div>
-        </div>
-      </div>
-      <div className="w-full h-[500px] lex gap-8 flex-col justify-center bg-emerald-600">
-        <div className="flex gap-9 justify-center">
-          <div className="w-20 h-20 bg-amber-300"></div>
-          <div className="w-20 h-20 bg-amber-300"></div>
-          <div className="w-20 h-20 bg-amber-300"></div>
-          <div className="w-20 h-20 bg-amber-300"></div>
-        </div>
-        <div className="flex">
-          <div className="flex w-1/2 h-[300px] bg-sky-500"></div>
-          <div className="flex w-1/2 h-[300px] bg-sky-900"></div>
-        </div>
-      </div>
+    <section ref={topRef} className="flex-1 p-6 text-white">
+      <SkinCarousel
+        id={id}
+        skins={skins}
+        name={name}
+        lore={lore}
+        skinIndex={skinIndex}
+        onChangeIndex={setSkinIndex}
+      />
+      <SkillList passive={passive} spells={spells} />
     </section>
   );
 }
 
+function SkillList({ spells, passive }) {
+  return (
+    <div className="flex flex-col gap-4 mt-6 w-full">
+      {/* Passive */}
+      {passive && (
+        <div className="flex items-center gap-4 p-4 w-full rounded-lg bg-white/10">
+          <img
+            src={passiveIconUrl(passive.image.full)}
+            alt={passive.name}
+            className="w-12 h-12 rounded"
+          />
+          <div>
+            <h3 className="font-bold text-white">
+              기본 지속 효과 - {passive.name}
+            </h3>
+            <p className="text-sm text-gray-300">
+              {clean(passive.description)}
+            </p>
+          </div>
+        </div>
+      )}
+      {spells.map((spell, i) => (
+        <div
+          key={spell.id}
+          className="flex items-center gap-4 p-4 w-full rounded-lg bg-white/10"
+        >
+          <img
+            src={spellIconUrl(spell.image.full)}
+            alt={spell.name}
+            className="w-12 h-12 rounded"
+          />
+          <div>
+            <h3 className="font-bold text-white">
+              {['Q', 'W', 'E', 'R'][i]} - {spell.name}
+            </h3>
+            <p className="text-sm text-gray-300">{clean(spell.description)}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+// 설명글 긁어올떄 html 태그 포함되어 있어서 제거
+function clean(html) {
+  if (!html) return '';
+  return String(html)
+    .replace(/<\/?br\s*\/?>/gi, '\n') // <br> → 개행
+    .replace(/<\/?i>/gi, '') // <i> ~ </i> 제거 (옵션)
+    .replace(/<\/?font[^>]*>/gi, ''); // <font> 제거 (옵션)
+}
 export default ChampionInfo;
