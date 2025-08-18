@@ -27,7 +27,7 @@ function Champions() {
               />
             </div>
             <div className="min-w-0 flex-1">
-              <ChampionInfo />
+              <ChampionInfo championId={selectedId} />
             </div>
           </div>
         </div>
