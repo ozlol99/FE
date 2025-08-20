@@ -1,1 +1,17 @@
 @import 'tailwindcss';
+
+body {
+  background-color: #282828;
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 10s linear infinite; /* 10초에 한 바퀴 */
+}

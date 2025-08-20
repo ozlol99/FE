@@ -1,19 +1,63 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+
+import Layout from './layouts/Layout.jsx';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import OAuthCallback from './pages/OAuthCallback';
+import MatchHistorych from './pages/MatchHistory';
+import MyPage from './pages/MyPage';
+import AdditionalInfo from './pages/AdditionalInfo';
+import RoomList from './pages/RoomList';
+import Champions from './pages/Champions.jsx';
+
+import SocketProvider from '@/context/SocketProvider'; // ✅ 추가
+import RoomPage from './pages/RoomPage.jsx';
+
+// 간단한 보호 라우트 (로그인 필요 페이지용)
+function RequireAuth({ isLogin, children }) {
+  if (!isLogin) {
+    window.location.href = '/login';
+    return null;
+  }
+  return children;
+}
 
 function App() {
+  const [isLogin, setIsLogin] = useState(
+    Boolean(localStorage.getItem('accessToken')), // 새로고침에도 유지
+  );
+
+  // 매 렌더마다 최신 토큰을 읽어서 Provider에 전달
+  const token = localStorage.getItem('accessToken') || undefined;
+
   return (
-    <BrowserRouter>
-      <nav>
-        {/* 라우팅 테스트용 */}
-        <Link to="/">Home</Link> | <Link to="/login">Login</Link>
-      </nav>
+    <SocketProvider token={token}>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Navbar/레이아웃이 필요한 페이지들 */}
+        <Route element={<Layout isLogin={isLogin} setIsLogin={setIsLogin} />}>
+          <Route index element={<Home />} />
+          <Route path="rooms" element={<RoomList />} />
+          <Route path="match-detail/:name/:tag" element={<MatchHistorych />} />
+          <Route path="/champions" element={<Champions />} />
+          <Route path="add-info" element={<AdditionalInfo />} />
+          <Route
+            path="mypage"
+            element={
+              <RequireAuth isLogin={isLogin}>
+                {' '}
+                <MyPage />{' '}
+              </RequireAuth>
+            }
+          />
+        </Route>
+
+        {/* 레이아웃 없이 단독 렌더 */}
         <Route path="/login" element={<Login />} />
+        <Route path="room" element={<RoomPage />} />
+        <Route path="/auth/callback" element={<OAuthCallback />} />
       </Routes>
-    </BrowserRouter>
+    </SocketProvider>
   );
 }
 
