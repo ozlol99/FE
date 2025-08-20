@@ -42,10 +42,11 @@ function NavBar({ isLogin, onLogout }) {
       </div>
       <div className="flex h-full ml-auto gap-2">
         {' '}
+        {/* 이거 다시 밑으로 넣기 */}
+        <NavBarLinkStyle to="/mypage">마이페이지</NavBarLinkStyle>
         {/* ← gap으로 간격 */}
         {isLogin ? (
           <>
-            <NavBarLinkStyle to="/mypage">마이페이지</NavBarLinkStyle>
             <NavBarLinkStyle onClick={onLogout}>로그아웃</NavBarLinkStyle>
           </>
         ) : (
