@@ -27,7 +27,7 @@ export default function RoomPage() {
       losses: 608,
       rate: 50,
       likes: 0,
-      initial: 'P',
+      profile: 'P',
     },
     {
       id: 2,
@@ -37,7 +37,7 @@ export default function RoomPage() {
       losses: 608,
       rate: 50,
       likes: 0,
-      initial: 'P',
+      profile: 'P',
     },
     {
       id: 3,
@@ -47,7 +47,7 @@ export default function RoomPage() {
       losses: 608,
       rate: 50,
       likes: 0,
-      initial: 'P',
+      profile: 'P',
     },
     {
       id: 4,
@@ -57,12 +57,12 @@ export default function RoomPage() {
       losses: 608,
       rate: 50,
       likes: 0,
-      initial: 'P',
+      profile: 'P',
     },
   ]);
 
   return (
-    <div className="h-screen w-screen grid grid-cols-[minmax(0,1fr)_570px]">
+    <div className="h-screen w-screen flex ">
       <ChatSection title={title} setTitle={setTitle} />
       <RightPanel
         members={members}

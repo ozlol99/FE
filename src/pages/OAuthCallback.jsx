@@ -26,6 +26,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
+
 export default function OAuthCallback() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -73,6 +74,7 @@ export default function OAuthCallback() {
             ? window.location.replace(redirectUrl)
             : navigate(redirectUrl, { replace: true });
         }
+
 
         navigate('/login?error=oauth_failed', { replace: true });
       } catch {
