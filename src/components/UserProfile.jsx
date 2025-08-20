@@ -27,6 +27,7 @@ function UserProfile({ summoner, account }) {
               <span className="text-gray-300">#{account?.tagLine}</span>
             </div>
             <div>
+              {/* 갱신시 새로고침 click 이벤트 작성 */}
               <button className="bg-[#00BBA3] text-white hover:bg-cyan-600 hover:dark:bg-cyan-900 text-sm px-4 h-10 align-middle rounded-xl justify-center box-border disabled:bg-gray-200 disabled:text-gray-300 relative flex items-center gap-1">
                 <span>전적갱신</span>
               </button>

@@ -10,8 +10,10 @@ export const positionIcons = {
   TOP: TopIcon,
   JUNGLE: JungleIcon,
   MID: MidIcon,
+  MIDDLE: MidIcon,
   BOTTOM: BotIcon,
   SUPPORT: SupportIcon,
+  UTILITY: SupportIcon,
 };
 
 export function getPositionIcon(position) {

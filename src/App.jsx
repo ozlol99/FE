@@ -11,17 +11,19 @@ import AdditionalInfo from './pages/AdditionalInfo';
 import RoomList from './pages/RoomList';
 import Champions from './pages/Champions.jsx';
 
-import SocketProvider from '@/context/SocketProvider'; // ✅ 추가
+import SocketProvider from '@/context/SocketProvider';
 import RoomPage from './pages/RoomPage.jsx';
+import LeaderBoard from './pages/LeaderBoard.jsx';
+import SignupAddInfo from './pages/SignupAddInfo.jsx';
 
 // 간단한 보호 라우트 (로그인 필요 페이지용)
-function RequireAuth({ isLogin, children }) {
-  if (!isLogin) {
-    window.location.href = '/login';
-    return null;
-  }
-  return children;
-}
+// function RequireAuth({ isLogin, children }) {
+//   if (!isLogin) {
+//     window.location.href = '/login';
+//     return null;
+//   }
+//   return children;
+// }
 
 function App() {
   const [isLogin, setIsLogin] = useState(
@@ -40,14 +42,16 @@ function App() {
           <Route path="rooms" element={<RoomList />} />
           <Route path="match-detail/:name/:tag" element={<MatchHistorych />} />
           <Route path="/champions" element={<Champions />} />
-          <Route path="add-info" element={<AdditionalInfo />} />
+          {/* 라우터 주소 수정 필요 */}
+          <Route path="add" element={<AdditionalInfo />} />
+          <Route path="add-info" element={<SignupAddInfo />} />
+          <Route path="/leaderboard" element={<LeaderBoard />} />
           <Route
             path="mypage"
             element={
-              <RequireAuth isLogin={isLogin}>
-                {' '}
-                <MyPage />{' '}
-              </RequireAuth>
+              // <RequireAuth isLogin={isLogin}>
+              <MyPage />
+              // </RequireAuth>
             }
           />
         </Route>
