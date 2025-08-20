@@ -221,7 +221,7 @@ export default function SignupAddInfo() {
             provider: me.google_or_kakao || '',
           });
         } else {
-          navigate('/login');
+          // navigate('/login');
         }
       } catch (err) {
         console.error('fetch /me 실패:', err);
