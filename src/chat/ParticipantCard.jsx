@@ -7,15 +7,9 @@ export function Chip({ children }) {
   );
 }
 
-export function RankEmblem() {
-  return (
-    <div className="relative h-10 w-10 rounded-full bg-gradient-to-br from-fuchsia-500 via-violet-500 to-indigo-500 ring-2 ring-violet-300/40 shadow-lg" />
-  );
-}
-
 export default function ParticipantCard({ member, onRemove, onAddLike }) {
   return (
-    <div className="relative rounded-xl bg-[#242424] border border-[#343434] p-3 shadow-md">
+    <div className="relative rounded-xl bg-[#242424] border border-[#343434] p-1.5 shadow-md">
       <button
         title="닫기"
         onClick={() => onRemove?.(member.id)}
@@ -53,7 +47,7 @@ export default function ParticipantCard({ member, onRemove, onAddLike }) {
         {/* 좋아요 버튼 */}
         <button
           onClick={() => onAddLike?.(member.id)}
-          className="ml-auto flex items-center gap-1 rounded-full p-1 text-rose-400 hover:scale-110 transition"
+          className="ml-auto flex gap-1 rounded-full p-1 text-rose-400 hover:scale-110 transition absolute right-1 bottom-1 cursor-pointer"
         >
           <IconHeart filled />
           <span className="text-xs text-[#dcdcdc]">{member.likes ?? 0}</span>
