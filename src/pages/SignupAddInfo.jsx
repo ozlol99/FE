@@ -97,7 +97,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CustomInput from '@/components/CustomInput';
 import GenderToggle from '@/components/ToggleButton';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://api.lol99.kro.kr';
+// const API_BASE = import.meta.env.VITE_API_BASE || 'http://api.lol99.kro.kr';
+const API_BASE = 'http://3.34.53.80:8000';
+
 const ADD_INFO_ENDPOINT = `${API_BASE}/user/register`;
 
 function dateInputToUTCISO(yyyyMmDd) {
@@ -152,6 +154,7 @@ export default function SignupAddInfo() {
     try {
       setSubmitting(true);
       setError(null);
+      // const ADD_INFO_ENDPOINT = `${API_BASE}/user/register`;
       const res = await fetch(ADD_INFO_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -164,6 +167,7 @@ export default function SignupAddInfo() {
       setError(data?.message || data?.detail || '추가정보 저장 실패');
     } catch {
       setError('네트워크 오류가 발생했습니다.');
+      alert('오류');
       navigate('/');
     } finally {
       setSubmitting(false);
