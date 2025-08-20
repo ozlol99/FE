@@ -72,6 +72,13 @@ export default function JoinOptionsContent({
     };
 
     onSubmit(payload);
+
+    // 🔹 작은 팝업창으로 채팅방 열기
+    window.open(
+      `/room/${payload.title}`,
+      '_blank',
+      'width=670,height=820,left=100,top=100,resizable=no,scrollbars=yes',
+    );
   };
 
   const isLocked = (k) => Boolean(locks?.[k]);
@@ -194,7 +201,7 @@ export default function JoinOptionsContent({
         </div>
 
         {/* 옵션 스위치 */}
-        <div className="md:col-span-4 lg:col-span-5">
+        <div className="md:col-span-4 lg:col-span-4">
           <div
             className={[
               'space-y-1.5 p-2 text-xs rounded-md',
@@ -297,7 +304,7 @@ export default function JoinOptionsContent({
           onClick={handleSubmit}
           className="w-full rounded-lg bg-[#00BBA3] px-4 py-3 text-sm font-semibold text-[#0b0f14] hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008f7c]"
         >
-          등록
+          {isHost ? '완료' : '참가'}
         </button>
       </div>
     </div>

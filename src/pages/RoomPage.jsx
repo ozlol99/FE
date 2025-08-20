@@ -62,7 +62,7 @@ export default function RoomPage() {
   ]);
 
   return (
-    <div className="h-screen w-screen grid grid-cols-[minmax(0,1fr)_570px]">
+    <div className="h-screen w-screen flex ">
       <ChatSection title={title} setTitle={setTitle} />
       <RightPanel
         members={members}
