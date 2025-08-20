@@ -1,4 +1,3 @@
-// src/pages/RoomList.jsx
 import { useState, useMemo } from 'react';
 import { useSocket } from '@/context/SocketProvider'; // ✅
 import Fab from '@/components/Fab';
@@ -26,6 +25,15 @@ const emitAck = (socket, event, payload) =>
   });
 
 export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
+  const [openCreate, setOpenCreate] = useState(false); // 방 만들기
+  const [openJoin, setOpenJoin] = useState(false); // 방 참가하기
+  const [selectedRoom, setSelectedRoom] = useState(null);
+
+  const handleJoin = (roomId) => {
+    setSelectedRoom(roomId);
+    setOpenJoin(true);
+  };
+
   const socket = useSocket(); // ✅
 
   const items = queues?.length ? queues : DEFAULT_QUEUES;
@@ -62,9 +70,6 @@ export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
     [active, rooms],
   );
 
-  // 모달 상태 (host 전용)
-  const [openCreate, setOpenCreate] = useState(false);
-
   // ✅ 방 만들기 submit (ACK 받고 리스트에 추가)
   const handleCreate = async (payload) => {
     try {
@@ -92,7 +97,7 @@ export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
       <RoomsGridSection
         rooms={visibleRooms}
         onClick={(id) => console.log('open room', id)}
-        onJoin={(id) => console.log('join room', id)}
+        onJoin={handleJoin}
       />
 
       {/* 방 만들기: host 모드로 오픈 */}
@@ -101,20 +106,29 @@ export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
       <JoinOptions
         mode="host"
         asModal
-        open={openCreate}
+        open={openCreate} // host는 openCreate
         onClose={() => setOpenCreate(false)}
-        titleText="방 만들기"
-        riotTags={['CaptainLee#KR1', 'SubAcc#KR2']} // 연동 계정
-        defaults={{
-          defaultQueue: 'solo',
-          defaultCapacity: 5,
-          defaultDiscord: false,
-          defaultMic: true,
-          defaultListenOnly: false,
-          defaultLookingFor: [],
-          defaultMyPositions: [],
+        onSubmit={(action, payload) => {
+          if (action === 'create') {
+            handleCreate(payload);
+          }
         }}
-        onSubmit={handleCreate}
+      />
+
+      {/* 방 참가하기 (guest) */}
+      <JoinOptions
+        mode="guest"
+        asModal
+        open={openJoin} // guest는 openJoin
+        onClose={() => setOpenJoin(false)}
+        defaultTitle={selectedRoom?.title}
+        defaultQueue={selectedRoom?.queue}
+        defaultLookingFor={selectedRoom?.lookingFor}
+        onSubmit={(action, payload) => {
+          if (action === 'join') {
+            handleJoin(payload);
+          }
+        }}
       />
     </div>
   );

@@ -11,7 +11,7 @@ export default function JoinOptions({
   open = false,
   onClose,
   backdropClosable = false,
-  titleText = '방 만들기',
+  titleText,
   riotTags = [],
   defaultRiotTag = '',
   defaultTitle = '',
@@ -25,7 +25,7 @@ export default function JoinOptions({
   maxMyPositions = 2,
   onSubmit,
 }) {
-  const isHost = mode === 'host';
+  const isHost = mode === 'host' || mode === 'edit';
 
   const [riotTag, setRiotTag] = useState(defaultRiotTag || riotTags[0] || '');
   const [title, setTitle] = useState(defaultTitle);
@@ -42,6 +42,39 @@ export default function JoinOptions({
   const myCount = myPos.size;
   const myLimitReached = myCount >= maxMyPositions;
 
+  const titleMap = {
+    host: '방 만들기',
+    guest: '방 참가하기',
+    edit: '방 수정하기',
+  };
+
+  const titleLabel = titleText || titleMap[mode];
+
+  const locks = {
+    host: {
+      title: false, // 수정 가능
+      queue: false,
+      looking: false,
+      options: false,
+      capacity: false,
+    },
+    edit: {
+      title: false, // 수정 가능 (host랑 동일)
+      queue: false,
+      looking: false,
+      options: false,
+      capacity: false,
+    },
+    guest: {
+      title: true, // 수정 불가능
+      queue: true,
+      looking: true,
+      options: true,
+      capacity: true,
+    },
+  };
+
+  const currentLocks = locks[mode] || locks.guest;
   const allow =
     (fn, allow) =>
     (...args) =>
@@ -104,20 +137,19 @@ export default function JoinOptions({
     ],
   );
 
-  const submitHandler = () => onSubmit?.(payload);
+  const submitHandler = () => {
+    if (mode === 'host') onSubmit?.('create', payload);
+    if (mode === 'guest') onSubmit?.('join', payload);
+    if (mode === 'edit') onSubmit?.('update', payload);
+  };
 
   const card = (
     <div className="w-full max-w-[620px] rounded-2xl border border-[#2b3240]/80 bg-gradient-to-b from-[#1a1f29] to-[#0f141b] shadow-[0_12px_28px_rgba(0,0,0,0.55)]">
       <JoinOptionsContent
         asModal={asModal}
-        titleText={titleText}
+        titleText={titleLabel}
         onClose={onClose}
-        locks={{
-          title: !isHost,
-          queue: !isHost,
-          looking: !isHost,
-          options: !isHost,
-        }}
+        locks={currentLocks}
         riotTags={riotTags}
         riotTag={riotTag}
         onChangeRiotTag={setRiotTag}
@@ -145,13 +177,16 @@ export default function JoinOptions({
         capacity={capacity}
         onChangeCapacity={setCapacityGuard}
         capacityOptions={CAPACITY_OPTIONS}
+        submitLabel={
+          mode === 'host' ? '방 만들기' : mode === 'edit' ? '수정 완료' : '참가'
+        }
         onSubmit={submitHandler}
       />
     </div>
   );
 
   if (!asModal) return card;
-
+  console.log('JoinOptions open:', open, 'mode:', mode);
   return (
     <ModalShell
       open={!!open}

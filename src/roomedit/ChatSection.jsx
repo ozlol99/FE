@@ -1,11 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import Chat from '@/chat/Chat';
-import { IconSettings, IconSend, IconEdit, IconCheck, IconX } from '@/icons';
+import { IconSettings, IconSend } from '@/icons';
+import JoinOptions from '@/components/JoinOptions';
 
-export default function ChatSection({ title, setTitle, roomId, token }) {
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [tempTitle, setTempTitle] = useState(title);
-  const titleInputRef = useRef(null);
+export default function ChatSection({
+  title,
+  roomId,
+  token,
+  role = 'guest',
+  onLeave,
+}) {
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false); // ⚙️ 설정 메뉴 열림 여부
 
   /* --- 채팅 메시지 --- */
   const [messages, setMessages] = useState([
@@ -13,42 +19,7 @@ export default function ChatSection({ title, setTitle, roomId, token }) {
   ]);
   const [input, setInput] = useState('');
   const listRef = useRef(null);
-  const wsRef = useRef(null); // 웹소켓 ref
-
-  /* --- 제목 편집 --- */
-  useEffect(() => {
-    if (isEditingTitle && titleInputRef.current) {
-      titleInputRef.current.focus();
-      titleInputRef.current.select();
-    }
-  }, [isEditingTitle]);
-
-  const saveTitle = () => {
-    const next = tempTitle.trim().slice(0, 30);
-    if (!next) {
-      setTempTitle(title);
-      setIsEditingTitle(false);
-      return;
-    }
-    setTitle(next);
-    setIsEditingTitle(false);
-  };
-
-  const cancelEdit = () => {
-    setTempTitle(title);
-    setIsEditingTitle(false);
-  };
-
-  const onTitleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      saveTitle();
-    }
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      cancelEdit();
-    }
-  };
+  const wsRef = useRef(null);
 
   /* --- 메시지 스크롤 유지 --- */
   useEffect(() => {
@@ -67,10 +38,7 @@ export default function ChatSection({ title, setTitle, roomId, token }) {
 
     wsRef.current = ws;
 
-    ws.onopen = () => {
-      console.log('✅ WebSocket 연결 성공');
-    };
-
+    ws.onopen = () => console.log('✅ WebSocket 연결 성공');
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log('📩 받은 데이터:', data);
@@ -115,24 +83,16 @@ export default function ChatSection({ title, setTitle, roomId, token }) {
       }
     };
 
-    ws.onclose = () => {
-      console.log('❌ WebSocket 연결 종료');
-    };
+    ws.onclose = () => console.log('❌ WebSocket 연결 종료');
 
-    return () => {
-      ws.close();
-    };
+    return () => ws.close();
   }, [roomId, token]);
 
   /* --- 메시지 전송 --- */
   const send = () => {
     const text = input.trim();
-    if (!text || !wsRef.current) return;
+    if (!text) return;
 
-    // 서버에 전송
-    wsRef.current.send(text);
-
-    // 내 메시지는 바로 추가
     setMessages((prev) => [
       ...prev,
       {
@@ -147,90 +107,119 @@ export default function ChatSection({ title, setTitle, roomId, token }) {
     ]);
 
     setInput('');
+
+    if (wsRef.current && wsRef.current.readyState === 1) {
+      wsRef.current.send(text);
+    }
   };
 
   return (
-    <section className="relative flex flex-col border-r border-[#2b2b2b]">
-      {/* 헤더 */}
-      <header className="flex items-center justify-between px-4 h-12 border-b border-[#2b2b2b]">
-        <div className="flex items-center gap-2">
-          {isEditingTitle ? (
-            // 제목 수정 폼
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                saveTitle();
+    <>
+      <section className="relative flex flex-col border-r border-[#2b2b2b] w-[350px]">
+        {/* 헤더 */}
+        <header className="flex items-center justify-between px-4 h-12 border-b border-[#2b2b2b]">
+          <div className="flex items-center gap-2">
+            <h1 className="text-sm sm:text-base font-semibold text-white">
+              {title}
+            </h1>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* 설정 버튼 */}
+            <div className="relative flex">
+              <button
+                className="text-[#9a9a9a] hover:text-white cursor-pointer"
+                title="설정"
+                onClick={() => setOpenMenu((prev) => !prev)}
+              >
+                <IconSettings />
+              </button>
+
+              {openMenu && (
+                <div className="absolute right-0 mt-2 w-32 bg-[#242424] border border-[#333] rounded shadow-lg z-10">
+                  <button
+                    className="w-full px-3 py-2 text-left text-sm text-white hover:bg-[#333] cursor-pointer"
+                    onClick={() => {
+                      setOpenEdit(true);
+                      setOpenMenu(false);
+                    }}
+                  >
+                    설정 열기
+                  </button>
+                  <button
+                    className="w-full px-3 py-2 text-left text-sm text-red-400 hover:bg-[#333] cursor-pointer"
+                    onClick={() => {
+                      onLeave?.();
+                      setOpenMenu(false);
+                    }}
+                  >
+                    방 나가기
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 게스트일 때만 헤더에 "나가기" 버튼 */}
+            {role === 'guest' && (
+              <button
+                onClick={onLeave}
+                className="px-3 py-1.5 text-xs rounded-md border border-[#3a3a3a] 
+                          bg-[#1e1e1e] text-red-400 hover:bg-[#2b2b2b] 
+                          transition-colors cursor-pointer"
+              >
+                나가기
+              </button>
+            )}
+          </div>
+        </header>
+
+        {/* 메시지 리스트 */}
+        <div
+          ref={listRef}
+          className="flex-1 overflow-y-auto px-4 py-2 space-y-1"
+        >
+          {messages.map((m) => (
+            <Chat key={m.id} {...m} />
+          ))}
+        </div>
+
+        {/* 입력창 */}
+        <footer className="border-t border-[#2b2b2b] p-3">
+          <div className="flex items-center gap-2">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  send();
+                }
               }}
-              className="flex items-center gap-2"
+              placeholder="메시지를 입력하세요…"
+              className="flex-1 h-10 rounded-xl text-white bg-[#242424] border border-[#333] px-3 text-sm"
+            />
+            <button
+              onClick={send}
+              className="flex items-center h-10 px-3 rounded-xl bg-[#5d5cf5] text-white cursor-pointer"
             >
-              <input
-                ref={titleInputRef}
-                value={tempTitle}
-                onChange={(e) => setTempTitle(e.target.value)}
-                onKeyDown={onTitleKeyDown}
-                onBlur={saveTitle}
-                maxLength={30}
-                className="h-8 rounded-md bg-[#242424] border border-[#333] px-2 text-sm placeholder:text-[#fff]"
-                placeholder="방 제목을 입력하세요"
-              />
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1 px-2 h-8 text-xs text-white"
-              >
-                <IconCheck /> 저장
-              </button>
-              <button
-                type="button"
-                onClick={cancelEdit}
-                className="inline-flex items-center gap-1 px-2 h-8 text-xs text-white"
-              >
-                <IconX /> 취소
-              </button>
-            </form>
-          ) : (
-            <>
-              <h1 className="text-sm sm:text-base font-semibold text-white">
-                {title}
-              </h1>
-              <button
-                onClick={() => setIsEditingTitle(true)}
-                className="ml-1 inline-flex items-center gap-1 px-2 h-8 text-xs text-white"
-              >
-                <IconEdit />
-              </button>
-            </>
-          )}
-        </div>
-        <button className="text-[#9a9a9a] hover:text-white" title="설정">
-          <IconSettings />
-        </button>
-      </header>
+              <IconSend /> 전송
+            </button>
+          </div>
+        </footer>
+      </section>
 
-      {/* 메시지 리스트 */}
-      <div ref={listRef} className="flex-1 overflow-y-auto px-4 py-2 space-y-1">
-        {messages.map((m) => (
-          <Chat key={m.id} {...m} />
-        ))}
-      </div>
-
-      {/* 입력창 */}
-      <footer className="border-t border-[#2b2b2b] p-3">
-        <div className="flex items-center gap-2">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => (e.key === 'Enter' ? send() : null)}
-            placeholder="메시지를 입력하세요…"
-            className="flex-1 h-10 rounded-xl text-white bg-[#242424] border border-[#333] px-3 text-sm"
-          />
-          <button
-            onClick={send}
-            className="flex items-center h-10 px-3 rounded-xl bg-[#5d5cf5] text-white"
-          >
-            <IconSend /> 전송
-          </button>
-        </div>
-      </footer>
-    </section>
+      {/* 방 수정 모달 */}
+      <JoinOptions
+        mode="edit"
+        asModal
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        onSubmit={(action) => {
+          if (action === 'update') {
+            setOpenEdit(false);
+          }
+        }}
+      />
+    </>
   );
 }
