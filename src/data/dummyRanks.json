@@ -1,0 +1,907 @@
+{
+  "items": [
+    {
+      "rank": 1,
+      "summoner_name": "Player1",
+      "tier": "Challenger",
+      "lp": 2200,
+      "wins": 540,
+      "losses": 360,
+      "level": 600
+    },
+    {
+      "rank": 2,
+      "summoner_name": "Player2",
+      "tier": "Challenger",
+      "lp": 2196,
+      "wins": 535,
+      "losses": 360,
+      "level": 596
+    },
+    {
+      "rank": 3,
+      "summoner_name": "Player3",
+      "tier": "Challenger",
+      "lp": 2192,
+      "wins": 531,
+      "losses": 359,
+      "level": 592
+    },
+    {
+      "rank": 4,
+      "summoner_name": "Player4",
+      "tier": "Challenger",
+      "lp": 2188,
+      "wins": 527,
+      "losses": 358,
+      "level": 588
+    },
+    {
+      "rank": 5,
+      "summoner_name": "Player5",
+      "tier": "Challenger",
+      "lp": 2184,
+      "wins": 523,
+      "losses": 357,
+      "level": 584
+    },
+    {
+      "rank": 6,
+      "summoner_name": "Player6",
+      "tier": "Challenger",
+      "lp": 2180,
+      "wins": 518,
+      "losses": 357,
+      "level": 580
+    },
+    {
+      "rank": 7,
+      "summoner_name": "Player7",
+      "tier": "Challenger",
+      "lp": 2176,
+      "wins": 514,
+      "losses": 356,
+      "level": 576
+    },
+    {
+      "rank": 8,
+      "summoner_name": "Player8",
+      "tier": "Challenger",
+      "lp": 2171,
+      "wins": 509,
+      "losses": 356,
+      "level": 572
+    },
+    {
+      "rank": 9,
+      "summoner_name": "Player9",
+      "tier": "Challenger",
+      "lp": 2167,
+      "wins": 506,
+      "losses": 354,
+      "level": 568
+    },
+    {
+      "rank": 10,
+      "summoner_name": "Player10",
+      "tier": "Challenger",
+      "lp": 2163,
+      "wins": 501,
+      "losses": 354,
+      "level": 564
+    },
+    {
+      "rank": 11,
+      "summoner_name": "Player11",
+      "tier": "Challenger",
+      "lp": 2159,
+      "wins": 497,
+      "losses": 352,
+      "level": 560
+    },
+    {
+      "rank": 12,
+      "summoner_name": "Player12",
+      "tier": "Challenger",
+      "lp": 2155,
+      "wins": 492,
+      "losses": 352,
+      "level": 556
+    },
+    {
+      "rank": 13,
+      "summoner_name": "Player13",
+      "tier": "Challenger",
+      "lp": 2151,
+      "wins": 488,
+      "losses": 351,
+      "level": 552
+    },
+    {
+      "rank": 14,
+      "summoner_name": "Player14",
+      "tier": "Challenger",
+      "lp": 2147,
+      "wins": 484,
+      "losses": 350,
+      "level": 547
+    },
+    {
+      "rank": 15,
+      "summoner_name": "Player15",
+      "tier": "Challenger",
+      "lp": 2143,
+      "wins": 480,
+      "losses": 349,
+      "level": 543
+    },
+    {
+      "rank": 16,
+      "summoner_name": "Player16",
+      "tier": "Challenger",
+      "lp": 2139,
+      "wins": 475,
+      "losses": 349,
+      "level": 539
+    },
+    {
+      "rank": 17,
+      "summoner_name": "Player17",
+      "tier": "Challenger",
+      "lp": 2135,
+      "wins": 472,
+      "losses": 347,
+      "level": 535
+    },
+    {
+      "rank": 18,
+      "summoner_name": "Player18",
+      "tier": "Challenger",
+      "lp": 2131,
+      "wins": 467,
+      "losses": 347,
+      "level": 531
+    },
+    {
+      "rank": 19,
+      "summoner_name": "Player19",
+      "tier": "Challenger",
+      "lp": 2127,
+      "wins": 464,
+      "losses": 345,
+      "level": 527
+    },
+    {
+      "rank": 20,
+      "summoner_name": "Player20",
+      "tier": "Challenger",
+      "lp": 2122,
+      "wins": 459,
+      "losses": 345,
+      "level": 523
+    },
+    {
+      "rank": 21,
+      "summoner_name": "Player21",
+      "tier": "Challenger",
+      "lp": 2118,
+      "wins": 455,
+      "losses": 344,
+      "level": 519
+    },
+    {
+      "rank": 22,
+      "summoner_name": "Player22",
+      "tier": "Challenger",
+      "lp": 2114,
+      "wins": 451,
+      "losses": 343,
+      "level": 515
+    },
+    {
+      "rank": 23,
+      "summoner_name": "Player23",
+      "tier": "Challenger",
+      "lp": 2110,
+      "wins": 447,
+      "losses": 342,
+      "level": 511
+    },
+    {
+      "rank": 24,
+      "summoner_name": "Player24",
+      "tier": "Challenger",
+      "lp": 2106,
+      "wins": 443,
+      "losses": 341,
+      "level": 507
+    },
+    {
+      "rank": 25,
+      "summoner_name": "Player25",
+      "tier": "Challenger",
+      "lp": 2102,
+      "wins": 439,
+      "losses": 340,
+      "level": 503
+    },
+    {
+      "rank": 26,
+      "summoner_name": "Player26",
+      "tier": "Challenger",
+      "lp": 2098,
+      "wins": 435,
+      "losses": 339,
+      "level": 499
+    },
+    {
+      "rank": 27,
+      "summoner_name": "Player27",
+      "tier": "Challenger",
+      "lp": 2094,
+      "wins": 431,
+      "losses": 338,
+      "level": 495
+    },
+    {
+      "rank": 28,
+      "summoner_name": "Player28",
+      "tier": "Challenger",
+      "lp": 2090,
+      "wins": 427,
+      "losses": 337,
+      "level": 491
+    },
+    {
+      "rank": 29,
+      "summoner_name": "Player29",
+      "tier": "Challenger",
+      "lp": 2086,
+      "wins": 424,
+      "losses": 335,
+      "level": 487
+    },
+    {
+      "rank": 30,
+      "summoner_name": "Player30",
+      "tier": "Challenger",
+      "lp": 2082,
+      "wins": 419,
+      "losses": 335,
+      "level": 483
+    },
+    {
+      "rank": 31,
+      "summoner_name": "Player31",
+      "tier": "Challenger",
+      "lp": 2078,
+      "wins": 415,
+      "losses": 333,
+      "level": 479
+    },
+    {
+      "rank": 32,
+      "summoner_name": "Player32",
+      "tier": "Challenger",
+      "lp": 2073,
+      "wins": 411,
+      "losses": 332,
+      "level": 475
+    },
+    {
+      "rank": 33,
+      "summoner_name": "Player33",
+      "tier": "Challenger",
+      "lp": 2069,
+      "wins": 407,
+      "losses": 331,
+      "level": 471
+    },
+    {
+      "rank": 34,
+      "summoner_name": "Player34",
+      "tier": "Challenger",
+      "lp": 2065,
+      "wins": 403,
+      "losses": 330,
+      "level": 467
+    },
+    {
+      "rank": 35,
+      "summoner_name": "Player35",
+      "tier": "Challenger",
+      "lp": 2061,
+      "wins": 399,
+      "losses": 329,
+      "level": 463
+    },
+    {
+      "rank": 36,
+      "summoner_name": "Player36",
+      "tier": "Challenger",
+      "lp": 2057,
+      "wins": 395,
+      "losses": 328,
+      "level": 459
+    },
+    {
+      "rank": 37,
+      "summoner_name": "Player37",
+      "tier": "Challenger",
+      "lp": 2053,
+      "wins": 391,
+      "losses": 327,
+      "level": 455
+    },
+    {
+      "rank": 38,
+      "summoner_name": "Player38",
+      "tier": "Challenger",
+      "lp": 2049,
+      "wins": 388,
+      "losses": 325,
+      "level": 451
+    },
+    {
+      "rank": 39,
+      "summoner_name": "Player39",
+      "tier": "Challenger",
+      "lp": 2045,
+      "wins": 384,
+      "losses": 324,
+      "level": 446
+    },
+    {
+      "rank": 40,
+      "summoner_name": "Player40",
+      "tier": "Challenger",
+      "lp": 2041,
+      "wins": 380,
+      "losses": 323,
+      "level": 442
+    },
+    {
+      "rank": 41,
+      "summoner_name": "Player41",
+      "tier": "Challenger",
+      "lp": 2037,
+      "wins": 376,
+      "losses": 322,
+      "level": 438
+    },
+    {
+      "rank": 42,
+      "summoner_name": "Player42",
+      "tier": "Challenger",
+      "lp": 2033,
+      "wins": 373,
+      "losses": 320,
+      "level": 434
+    },
+    {
+      "rank": 43,
+      "summoner_name": "Player43",
+      "tier": "Challenger",
+      "lp": 2029,
+      "wins": 369,
+      "losses": 319,
+      "level": 430
+    },
+    {
+      "rank": 44,
+      "summoner_name": "Player44",
+      "tier": "Challenger",
+      "lp": 2024,
+      "wins": 365,
+      "losses": 318,
+      "level": 426
+    },
+    {
+      "rank": 45,
+      "summoner_name": "Player45",
+      "tier": "Challenger",
+      "lp": 2020,
+      "wins": 361,
+      "losses": 317,
+      "level": 422
+    },
+    {
+      "rank": 46,
+      "summoner_name": "Player46",
+      "tier": "Challenger",
+      "lp": 2016,
+      "wins": 358,
+      "losses": 315,
+      "level": 418
+    },
+    {
+      "rank": 47,
+      "summoner_name": "Player47",
+      "tier": "Challenger",
+      "lp": 2012,
+      "wins": 354,
+      "losses": 314,
+      "level": 414
+    },
+    {
+      "rank": 48,
+      "summoner_name": "Player48",
+      "tier": "Challenger",
+      "lp": 2008,
+      "wins": 351,
+      "losses": 312,
+      "level": 410
+    },
+    {
+      "rank": 49,
+      "summoner_name": "Player49",
+      "tier": "Challenger",
+      "lp": 2004,
+      "wins": 347,
+      "losses": 311,
+      "level": 406
+    },
+    {
+      "rank": 50,
+      "summoner_name": "Player50",
+      "tier": "Challenger",
+      "lp": 2000,
+      "wins": 343,
+      "losses": 310,
+      "level": 402
+    },
+    {
+      "rank": 51,
+      "summoner_name": "Player51",
+      "tier": "Grandmaster",
+      "lp": 1990,
+      "wins": 339,
+      "losses": 308,
+      "level": 398
+    },
+    {
+      "rank": 52,
+      "summoner_name": "Player52",
+      "tier": "Grandmaster",
+      "lp": 1982,
+      "wins": 336,
+      "losses": 306,
+      "level": 394
+    },
+    {
+      "rank": 53,
+      "summoner_name": "Player53",
+      "tier": "Grandmaster",
+      "lp": 1974,
+      "wins": 332,
+      "losses": 305,
+      "level": 390
+    },
+    {
+      "rank": 54,
+      "summoner_name": "Player54",
+      "tier": "Grandmaster",
+      "lp": 1966,
+      "wins": 329,
+      "losses": 303,
+      "level": 386
+    },
+    {
+      "rank": 55,
+      "summoner_name": "Player55",
+      "tier": "Grandmaster",
+      "lp": 1958,
+      "wins": 325,
+      "losses": 302,
+      "level": 382
+    },
+    {
+      "rank": 56,
+      "summoner_name": "Player56",
+      "tier": "Grandmaster",
+      "lp": 1950,
+      "wins": 322,
+      "losses": 300,
+      "level": 378
+    },
+    {
+      "rank": 57,
+      "summoner_name": "Player57",
+      "tier": "Grandmaster",
+      "lp": 1943,
+      "wins": 318,
+      "losses": 299,
+      "level": 374
+    },
+    {
+      "rank": 58,
+      "summoner_name": "Player58",
+      "tier": "Grandmaster",
+      "lp": 1935,
+      "wins": 315,
+      "losses": 297,
+      "level": 370
+    },
+    {
+      "rank": 59,
+      "summoner_name": "Player59",
+      "tier": "Grandmaster",
+      "lp": 1927,
+      "wins": 311,
+      "losses": 296,
+      "level": 366
+    },
+    {
+      "rank": 60,
+      "summoner_name": "Player60",
+      "tier": "Grandmaster",
+      "lp": 1919,
+      "wins": 308,
+      "losses": 294,
+      "level": 362
+    },
+    {
+      "rank": 61,
+      "summoner_name": "Player61",
+      "tier": "Grandmaster",
+      "lp": 1911,
+      "wins": 304,
+      "losses": 293,
+      "level": 358
+    },
+    {
+      "rank": 62,
+      "summoner_name": "Player62",
+      "tier": "Grandmaster",
+      "lp": 1903,
+      "wins": 301,
+      "losses": 291,
+      "level": 354
+    },
+    {
+      "rank": 63,
+      "summoner_name": "Player63",
+      "tier": "Grandmaster",
+      "lp": 1895,
+      "wins": 297,
+      "losses": 290,
+      "level": 349
+    },
+    {
+      "rank": 64,
+      "summoner_name": "Player64",
+      "tier": "Grandmaster",
+      "lp": 1887,
+      "wins": 294,
+      "losses": 288,
+      "level": 345
+    },
+    {
+      "rank": 65,
+      "summoner_name": "Player65",
+      "tier": "Grandmaster",
+      "lp": 1879,
+      "wins": 290,
+      "losses": 287,
+      "level": 341
+    },
+    {
+      "rank": 66,
+      "summoner_name": "Player66",
+      "tier": "Grandmaster",
+      "lp": 1871,
+      "wins": 287,
+      "losses": 285,
+      "level": 337
+    },
+    {
+      "rank": 67,
+      "summoner_name": "Player67",
+      "tier": "Grandmaster",
+      "lp": 1863,
+      "wins": 284,
+      "losses": 283,
+      "level": 333
+    },
+    {
+      "rank": 68,
+      "summoner_name": "Player68",
+      "tier": "Grandmaster",
+      "lp": 1855,
+      "wins": 280,
+      "losses": 282,
+      "level": 329
+    },
+    {
+      "rank": 69,
+      "summoner_name": "Player69",
+      "tier": "Grandmaster",
+      "lp": 1848,
+      "wins": 277,
+      "losses": 280,
+      "level": 325
+    },
+    {
+      "rank": 70,
+      "summoner_name": "Player70",
+      "tier": "Grandmaster",
+      "lp": 1840,
+      "wins": 273,
+      "losses": 279,
+      "level": 321
+    },
+    {
+      "rank": 71,
+      "summoner_name": "Player71",
+      "tier": "Grandmaster",
+      "lp": 1832,
+      "wins": 270,
+      "losses": 276,
+      "level": 317
+    },
+    {
+      "rank": 72,
+      "summoner_name": "Player72",
+      "tier": "Grandmaster",
+      "lp": 1824,
+      "wins": 266,
+      "losses": 275,
+      "level": 313
+    },
+    {
+      "rank": 73,
+      "summoner_name": "Player73",
+      "tier": "Grandmaster",
+      "lp": 1816,
+      "wins": 263,
+      "losses": 273,
+      "level": 309
+    },
+    {
+      "rank": 74,
+      "summoner_name": "Player74",
+      "tier": "Grandmaster",
+      "lp": 1808,
+      "wins": 260,
+      "losses": 271,
+      "level": 305
+    },
+    {
+      "rank": 75,
+      "summoner_name": "Player75",
+      "tier": "Grandmaster",
+      "lp": 1800,
+      "wins": 257,
+      "losses": 269,
+      "level": 301
+    },
+    {
+      "rank": 76,
+      "summoner_name": "Player76",
+      "tier": "Master",
+      "lp": 1780,
+      "wins": 253,
+      "losses": 268,
+      "level": 297
+    },
+    {
+      "rank": 77,
+      "summoner_name": "Player77",
+      "tier": "Master",
+      "lp": 1767,
+      "wins": 250,
+      "losses": 266,
+      "level": 293
+    },
+    {
+      "rank": 78,
+      "summoner_name": "Player78",
+      "tier": "Master",
+      "lp": 1754,
+      "wins": 247,
+      "losses": 264,
+      "level": 289
+    },
+    {
+      "rank": 79,
+      "summoner_name": "Player79",
+      "tier": "Master",
+      "lp": 1741,
+      "wins": 244,
+      "losses": 262,
+      "level": 285
+    },
+    {
+      "rank": 80,
+      "summoner_name": "Player80",
+      "tier": "Master",
+      "lp": 1729,
+      "wins": 240,
+      "losses": 261,
+      "level": 281
+    },
+    {
+      "rank": 81,
+      "summoner_name": "Player81",
+      "tier": "Master",
+      "lp": 1716,
+      "wins": 238,
+      "losses": 258,
+      "level": 277
+    },
+    {
+      "rank": 82,
+      "summoner_name": "Player82",
+      "tier": "Master",
+      "lp": 1703,
+      "wins": 234,
+      "losses": 257,
+      "level": 273
+    },
+    {
+      "rank": 83,
+      "summoner_name": "Player83",
+      "tier": "Master",
+      "lp": 1690,
+      "wins": 231,
+      "losses": 255,
+      "level": 269
+    },
+    {
+      "rank": 84,
+      "summoner_name": "Player84",
+      "tier": "Master",
+      "lp": 1677,
+      "wins": 228,
+      "losses": 253,
+      "level": 265
+    },
+    {
+      "rank": 85,
+      "summoner_name": "Player85",
+      "tier": "Master",
+      "lp": 1664,
+      "wins": 225,
+      "losses": 251,
+      "level": 261
+    },
+    {
+      "rank": 86,
+      "summoner_name": "Player86",
+      "tier": "Master",
+      "lp": 1651,
+      "wins": 222,
+      "losses": 249,
+      "level": 257
+    },
+    {
+      "rank": 87,
+      "summoner_name": "Player87",
+      "tier": "Master",
+      "lp": 1639,
+      "wins": 219,
+      "losses": 247,
+      "level": 253
+    },
+    {
+      "rank": 88,
+      "summoner_name": "Player88",
+      "tier": "Master",
+      "lp": 1626,
+      "wins": 216,
+      "losses": 245,
+      "level": 248
+    },
+    {
+      "rank": 89,
+      "summoner_name": "Player89",
+      "tier": "Master",
+      "lp": 1613,
+      "wins": 213,
+      "losses": 243,
+      "level": 244
+    },
+    {
+      "rank": 90,
+      "summoner_name": "Player90",
+      "tier": "Master",
+      "lp": 1600,
+      "wins": 210,
+      "losses": 241,
+      "level": 240
+    },
+    {
+      "rank": 91,
+      "summoner_name": "Player91",
+      "tier": "Diamond",
+      "lp": 1580,
+      "wins": 206,
+      "losses": 239,
+      "level": 236
+    },
+    {
+      "rank": 92,
+      "summoner_name": "Player92",
+      "tier": "Diamond",
+      "lp": 1566,
+      "wins": 203,
+      "losses": 237,
+      "level": 232
+    },
+    {
+      "rank": 93,
+      "summoner_name": "Player93",
+      "tier": "Diamond",
+      "lp": 1551,
+      "wins": 201,
+      "losses": 234,
+      "level": 228
+    },
+    {
+      "rank": 94,
+      "summoner_name": "Player94",
+      "tier": "Diamond",
+      "lp": 1537,
+      "wins": 197,
+      "losses": 233,
+      "level": 224
+    },
+    {
+      "rank": 95,
+      "summoner_name": "Player95",
+      "tier": "Diamond",
+      "lp": 1522,
+      "wins": 195,
+      "losses": 230,
+      "level": 220
+    },
+    {
+      "rank": 96,
+      "summoner_name": "Player96",
+      "tier": "Diamond",
+      "lp": 1508,
+      "wins": 192,
+      "losses": 228,
+      "level": 216
+    },
+    {
+      "rank": 97,
+      "summoner_name": "Player97",
+      "tier": "Diamond",
+      "lp": 1493,
+      "wins": 189,
+      "losses": 226,
+      "level": 212
+    },
+    {
+      "rank": 98,
+      "summoner_name": "Player98",
+      "tier": "Diamond",
+      "lp": 1479,
+      "wins": 186,
+      "losses": 224,
+      "level": 208
+    },
+    {
+      "rank": 99,
+      "summoner_name": "Player99",
+      "tier": "Diamond",
+      "lp": 1464,
+      "wins": 183,
+      "losses": 222,
+      "level": 204
+    },
+    {
+      "rank": 100,
+      "summoner_name": "Player100",
+      "tier": "Diamond",
+      "lp": 1450,
+      "wins": 180,
+      "losses": 220,
+      "level": 200
+    }
+  ],
+  "page": 1,
+  "size": 100,
+  "total": 100
+}

@@ -56,6 +56,7 @@ function PlayerMatchCard({ match, puuid }) {
   console.log(myData.perks?.styles?.[0]);
   console.log(myData.perks?.styles?.[0]?.selections);
   console.log(myData.perks?.styles?.[0]?.selections?.[0]);
+  console.log(myData?.teamPosition);
 
   return (
     // <div className=" relative flex w-full  border-l-8 border-l-rose-600 rounded-xl min-h-[110px] ">
