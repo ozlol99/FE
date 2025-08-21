@@ -99,7 +99,7 @@ export default function JoinOptionsContent({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-[#2b3240] px-2 py-1 text-sm hover:bg-white/5"
+            className="rounded-md border border-[#2b3240] px-2 py-1 text-sm hover:bg-white/5 cursor-pointer"
           >
             닫기
           </button>
@@ -275,7 +275,7 @@ export default function JoinOptionsContent({
                   type="button"
                   onClick={() => onChangeCapacity?.(n)}
                   className={[
-                    'w-10 h-9 rounded-md border transition',
+                    'w-10 h-9 rounded-md border transition cursor-pointer',
                     active
                       ? 'border-[#69e5cf] text-white bg-white/5 shadow-[0_0_0_2px_rgba(105,229,207,0.25)_inset]'
                       : 'border-[#6b7280]/40 text-[#b9c2d0]/80 hover:bg-white/5',
@@ -302,7 +302,7 @@ export default function JoinOptionsContent({
         <button
           type="button"
           onClick={handleSubmit}
-          className="w-full rounded-lg bg-[#00BBA3] px-4 py-3 text-sm font-semibold text-[#0b0f14] hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008f7c]"
+          className="w-full rounded-lg bg-[#00BBA3] px-4 py-3 text-sm font-semibold text-[#0b0f14] hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008f7c] cursor-pointer"
         >
           {isHost ? '완료' : '참가'}
         </button>

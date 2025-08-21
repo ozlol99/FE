@@ -13,7 +13,7 @@ export default function ParticipantCard({ member, onRemove, onAddLike }) {
       <button
         title="닫기"
         onClick={() => onRemove?.(member.id)}
-        className="absolute right-2 top-2 text-[#8b8b8b] hover:text-[#e2e2e2] transition"
+        className="absolute right-2 top-2 text-[#8b8b8b] hover:text-[#e2e2e2] transition cursor-pointer"
       >
         <IconX />
       </button>
@@ -47,9 +47,9 @@ export default function ParticipantCard({ member, onRemove, onAddLike }) {
         {/* 좋아요 버튼 */}
         <button
           onClick={() => onAddLike?.(member.id)}
-          className="ml-auto flex gap-1 rounded-full p-1 text-rose-400 hover:scale-110 transition absolute right-1 bottom-1 cursor-pointer"
+          className="ml-auto flex gap-1 items-center rounded-full p-1  text-rose-400 hover:scale-100 transition absolute right-1 bottom-1 cursor-pointer"
         >
-          <IconHeart filled />
+          <IconHeart filled className="w-3 h-3" />
           <span className="text-xs text-[#dcdcdc]">{member.likes ?? 0}</span>
         </button>
       </div>
