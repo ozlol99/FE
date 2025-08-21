@@ -22,7 +22,7 @@ export default function JoinOptions({
   defaultMic = true,
   defaultListenOnly = false,
   defaultCapacity = 5,
-  maxMyPositions = 2,
+  maxMyPositions = 1,
   onSubmit,
 }) {
   const isHost = mode === 'host' || mode === 'edit';
