@@ -15,9 +15,10 @@ export const gameModes = [
     icon: FlexIcon,
     image: flexImg,
   },
+
   {
     id: 2,
-    type: 'duo',
+    type: 'solo',
     title: 'Duo',
     subtitle: '개인 / 듀오 랭크',
     color: 'from-pink-600 to-pink-950',

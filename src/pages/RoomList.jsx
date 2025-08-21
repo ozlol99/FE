@@ -4,6 +4,7 @@ import Fab from '@/components/Fab';
 import RoomsGridSection from '@/components/RoomsGridSection';
 import TabOptions from '@/components/TabOptions';
 import JoinOptions from '@/components/JoinOptions';
+import { useLocation } from 'react-router-dom';
 
 // (옵션) 공용 ACK 유틸을 이미 만들었으면 그걸 사용
 // import { createRoom } from "@/api/roomSocketApi";
@@ -37,7 +38,12 @@ export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
   const socket = useSocket(); // ✅
 
   const items = queues?.length ? queues : DEFAULT_QUEUES;
-  const [internal, setInternal] = useState(items[0]?.key ?? 'all');
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialQueue = queryParams.get('queue') || 'all';
+
+  const [internal, setInternal] = useState(initialQueue);
   const active = selectedQueue ?? internal;
   const setActive = (key) =>
     onChangeQueue ? onChangeQueue(key) : setInternal(key);
