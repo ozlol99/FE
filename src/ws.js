@@ -1,23 +1,56 @@
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtaWthbjMxQG5hdmVyLmNvbSIsImV4cCI6MTc1NTc3OTU5OH0.aUhTG-JBel1ZVnqkRMcfZfbfdhPSQvo55_EAIqON0UA';
-const roomId = 1; // 실제로 DB에 존재하는 방 id 값
+export async function joinRoomAndConnect(roomId, riotAccountId, position) {
+  const token = localStorage.getItem(
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtaWthbjMxQG5hdmVyLmNvbSIsImV4cCI6MTc1NTc4NzQ1NH0.f5uay6u-lvLzmoQnSd9u7MRrGzzWbI4zyJ5fzidhlSY',
+  ); // 로그인 때 저장해둔 JWT
 
-export const ws = new WebSocket(
-  `wss://api.lol99.kro.kr/chat/ws/${roomId}?token=${token}`,
-);
+  try {
+    // 1. REST API로 방 참가
+    const res = await fetch(
+      `https://api.lol99.kro.kr/chat/rooms/${roomId}/join`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // ✅ 여기서는 Bearer 헤더
+        },
+        body: JSON.stringify({
+          riot_account_id: riotAccountId,
+          position: position,
+        }),
+      },
+    );
 
-ws.onopen = () => console.log('✅ WebSocket 연결 성공');
-ws.onerror = (err) => console.error('❌ WebSocket 에러:', err);
-ws.onclose = () => console.warn('⚠️ WebSocket 연결 종료됨');
-ws.onmessage = (event) => console.log('📩 메시지:', event.data);
+    if (!res.ok) {
+      throw new Error('방 참가 실패');
+    }
 
-// 안전하게 메시지 보내는 함수
-export function safeSend(data) {
-  if (ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify(data));
-  } else {
-    ws.addEventListener('open', () => ws.send(JSON.stringify(data)), {
-      once: true,
-    });
+    const roomData = await res.json();
+    console.log('✅ 방 참가 성공:', roomData);
+
+    // 2. 참가 성공 → WebSocket 연결
+    const ws = new WebSocket(
+      `wss://api.lol99.kro.kr/chat/ws/${roomId}?token=${token}`, // ✅ 여기서는 쿼리파라미터
+    );
+
+    ws.onopen = () => {
+      console.log('✅ WebSocket 연결 성공');
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log('📩 서버 메시지:', data);
+    };
+
+    ws.onclose = (e) => {
+      console.warn('⚠️ WebSocket 연결 종료', e.code, e.reason);
+    };
+
+    ws.onerror = (err) => {
+      console.error('❌ WebSocket 에러:', err);
+    };
+
+    return ws; // 필요하면 컴포넌트에서 이 ws 객체 사용 가능
+  } catch (err) {
+    console.error(err);
   }
 }

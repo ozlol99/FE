@@ -4,8 +4,8 @@ import Fab from '@/components/Fab';
 import RoomsGridSection from '@/components/RoomsGridSection';
 import TabOptions from '@/components/TabOptions';
 import JoinOptions from '@/components/JoinOptions';
-import { ws, safeSend } from '@/ws'; // ✅ 우리가 만든 WebSocket 클라이언트
 
+// 기본 큐 옵션
 const DEFAULT_QUEUES = [
   { key: 'all', label: '전체' },
   { key: 'solo_lank', label: '솔로랭크' },
@@ -30,11 +30,32 @@ export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
   const setActive = (key) =>
     onChangeQueue ? onChangeQueue(key) : setInternal(key);
 
-  // ✅ WebSocket 이벤트 리스너
+  // ✅ WebSocket 상태 저장
+  const [ws, setWs] = useState(null);
+
   useEffect(() => {
-    const handleMessage = (event) => {
+    const token = localStorage.getItem(
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtaWthbjMxQG5hdmVyLmNvbSIsImV4cCI6MTc1NTc4ODI5MH0.PM-Rm2VrYagr_YmDHwAIsiwM2krHOwA2cfvLNqNag7M',
+    ); // 🔑 토큰 가져오기
+    if (!token) {
+      console.error('❌ access_token 없음. 로그인 먼저 필요');
+      return;
+    }
+
+    // ✅ 토큰을 쿼리스트링으로 붙여서 연결
+    const socket = new WebSocket(
+      `wss://api.lol99.kro.kr/chat/ws/1?token=${token}`,
+    );
+
+    socket.addEventListener('open', () => {
+      console.log('✅ WebSocket 연결됨');
+      socket.send(JSON.stringify({ type: 'rooms:get' })); // 연결되면 방 리스트 요청
+    });
+
+    socket.addEventListener('message', (event) => {
       try {
         const msg = JSON.parse(event.data);
+        console.log('📩 서버 메시지:', msg);
 
         if (msg.type === 'rooms:list') {
           setRooms(msg.payload);
@@ -46,19 +67,32 @@ export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
       } catch (e) {
         console.error('WS 메시지 파싱 실패:', e);
       }
-    };
-
-    ws.addEventListener('open', () => {
-      console.log('✅ WebSocket 연결됨');
-      safeSend({ type: 'rooms:get' }); // 서버에 방 리스트 요청
     });
 
-    ws.addEventListener('message', handleMessage);
+    socket.addEventListener('close', () => {
+      console.log('⚠️ WebSocket 연결 종료됨');
+    });
 
+    socket.addEventListener('error', (err) => {
+      console.error('❌ WebSocket 에러:', err);
+    });
+
+    setWs(socket);
+
+    // cleanup
     return () => {
-      ws.removeEventListener('message', handleMessage);
+      socket.close();
     };
   }, []);
+
+  // ✅ 메시지 안전하게 보내는 함수
+  const safeSend = (msg) => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(msg));
+    } else {
+      console.warn('⚠️ WebSocket 아직 준비 안됨');
+    }
+  };
 
   // ✅ 현재 탭에 맞는 방만 보여주기
   const visibleRooms = useMemo(
@@ -78,6 +112,16 @@ export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
 
   // ✅ 방 참가
   const handleJoin = (room) => {
+    safeSend({
+      type: 'room:join',
+      payload: {
+        roomId: room.id,
+        riotAccountId: 123, // 더미값 (로그인 연동되면 실제 사용자 ID)
+        position: 'mid', // 선택된 포지션
+      },
+    });
+
+    console.log('방 참가 요청 ✅', room.id);
     navigate(`/room/${room.id}`);
   };
 
