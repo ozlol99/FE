@@ -15,11 +15,8 @@ export default function JoinOptionsContent({
   // 포지션/큐/스위치
   POSITIONS,
   QUEUES,
-  myCount,
-  maxMyPositions,
   myPos,
   toggleMy,
-  myLimitReached,
   queue,
   setQueue,
   discord,
@@ -146,29 +143,21 @@ export default function JoinOptionsContent({
         <div className="min-w-0 md:col-span-5 lg:col-span-5">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm text-slate-300">나의 포지션</p>
-            <p className="text-[11px] text-slate-400">
-              최대 {maxMyPositions}개 선택 ({myCount}/{maxMyPositions})
-            </p>
           </div>
           <div className="flex flex-nowrap gap-2 whitespace-nowrap overflow-x-auto md:overflow-visible md:whitespace-normal">
             {POSITIONS.map((p) => {
               const selected = myPos.has(p.key);
-              const disabled = myLimitReached && !selected;
               return (
                 <button
                   key={p.key}
                   type="button"
                   onClick={() => toggleMy(p.key)}
-                  disabled={disabled}
                   title={p.label}
                   className={[
                     'relative grid size-10 place-items-center rounded-md border transition',
                     selected
                       ? 'border-[#00BBA3] bg-[#00BBA3]/15 shadow-[0_0_0_1px_rgba(0,187,163,0.25)_inset,0_6px_14px_rgba(0,0,0,0.35)]'
                       : 'border-[#2b3240] bg-[#0f141b] hover:bg-[#131a22]',
-                    disabled
-                      ? 'opacity-50 cursor-not-allowed'
-                      : 'cursor-pointer',
                   ].join(' ')}
                 >
                   <img src={p.icon} alt={p.label} className="h-5 w-5" />

@@ -46,7 +46,7 @@ export default function ParticipantCard({ member, onRemove, onAddLike }) {
 
         {/* 좋아요 버튼 */}
         <button
-          onClick={() => onAddLike?.(member.id)}
+          onClick={() => onAddLike?.(Number(member.id))}
           className="ml-auto flex gap-1 items-center rounded-full p-1  text-rose-400 hover:scale-100 transition absolute right-1 bottom-1 cursor-pointer"
         >
           <IconHeart filled className="w-3 h-3" />
