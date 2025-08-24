@@ -90,15 +90,16 @@ export default function JoinOptionsContent({
             <select
               value={riotTag}
               onChange={(e) => onChangeRiotTag(Number(e.target.value))}
+              className={clsField}
             >
               {riotTags?.length ? (
                 riotTags.map((acc) => (
                   <option key={acc.id} value={acc.id}>
-                    {acc.game_name}#{acc.tag_line} {/* 보여주기용 */}
+                    {acc.game_name}#{acc.tag_line} {/* ✅ 원래 형태로 */}
                   </option>
                 ))
               ) : (
-                <option value={0}>연동된 태그 없음</option>
+                <option value="">연동된 태그 없음</option>
               )}
             </select>
           </div>
@@ -121,7 +122,7 @@ export default function JoinOptionsContent({
         {/* 내 포지션 */}
         <div className="min-w-0 md:col-span-5 lg:col-span-5">
           <p className="mb-2 text-sm text-slate-300">나의 포지션</p>
-          <div className="flex flex-nowrap gap-2 overflow-x-auto">
+          <div className="flex flex-nowrap gap-2 overflow-x-auto cursor-pointer">
             {POSITIONS.map((p) => {
               const selected = myPos.has(p.key);
               return (
