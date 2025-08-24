@@ -69,7 +69,7 @@ import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import Layout from './layouts/Layout.jsx';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import OAuthCallback from './pages/OAuthCallback';
+// import OAuthCallback from './pages/OAuthCallback';
 import MatchHistorych from './pages/MatchHistory';
 import MyPage from './pages/MyPage';
 import AdditionalInfo from './pages/AdditionalInfo';
@@ -109,8 +109,8 @@ export default function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/room/:room_id" element={<RoomPage />} />
-        <Route path="/oauth/callback" element={<OAuthCallback />} />
-        <Route path="/kakao-login" element={<OAuthCallback />} />
+        {/* <Route path="/oauth/callback" element={<OAuthCallback />} />
+        <Route path="/kakao-login" element={<OAuthCallback />} /> */}
       </Routes>
     </AuthProvider>
   );

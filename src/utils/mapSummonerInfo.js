@@ -1,11 +1,11 @@
 mapSummonerInfo.jsx;
 
 export function mapSummonerInfo(api) {
-  const s = api['(1) summoner_info'] || {};
-  const r = api['(2) rank_info'] || {};
-  const h = api['(3) highest_rank'] || {};
-  const summary = api['(4) match_summary'] || {};
-  const matches = api['(5) recent_matches'] || [];
+  const s = api['summoner_info'] || {};
+  const r = api['rank_info'] || {};
+  const h = api['highest_rank'] || {};
+  const summary = api['match_summary'] || {};
+  const matches = api['recent_matches'] || [];
 
   return {
     profile: {

@@ -1,5 +1,5 @@
 // 공통 버전 (ddragon 기준)
-export const DDRAGON_VER = '14.16.1';
+export const DDRAGON_VER = '14.17.1';
 
 // 스펠
 const spellData = {

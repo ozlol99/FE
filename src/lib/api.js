@@ -1,40 +1,117 @@
 import axios from 'axios';
 
 export const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE, // https://api.lol99.kro.kr
-  withCredentials: true, // 쿠키 들고 다님
+  baseURL: import.meta.env.VITE_API_BASE,
+  withCredentials: true,
 });
 
-// 401이면 /user/token/refresh 한 번 돌리고 원요청 재시도
+function getCookie(name) {
+  return (
+    document.cookie
+      .split('; ')
+      .find((v) => v.startsWith(name + '='))
+      ?.split('=')[1] || ''
+  );
+}
+
 let refreshing = false;
 let waiters = [];
 
+// API.interceptors.request.use((config) => {
+//   const isRefresh =
+//     config.url?.endsWith('/user/token/refresh') &&
+//     (config.method || 'get').toLowerCase() === 'post';
+
+//   if (isRefresh) {
+//     const csrf =
+//       getCookie('csrftoken') ||
+//       getCookie('XSRF-TOKEN') ||
+//       getCookie('_csrf') ||
+//       getCookie('csrf_token') ||
+//       '';
+
+//     if (csrf) {
+//       config.headers = config.headers || {};
+//       config.headers['X-CSRF-TOKEN'] = csrf;
+//     }
+
+//     console.log('[api] refresh 요청에 CSRF 토큰 추가:', csrf ? '있음' : '없음');
+//   }
+//   return config;
+// });
+
+API.interceptors.request.use((config) => {
+  const methodsNeedingCSRF = ['post', 'put', 'delete', 'patch'];
+  const method = (config.method || 'get').toLowerCase();
+
+  if (methodsNeedingCSRF.includes(method)) {
+    const csrf =
+      getCookie('csrftoken') ||
+      getCookie('XSRF-TOKEN') ||
+      getCookie('_csrf') ||
+      getCookie('csrf_token') ||
+      '';
+
+    if (csrf) {
+      config.headers = config.headers || {};
+      config.headers['X-CSRF-TOKEN'] = csrf;
+    }
+
+    console.log(
+      `[api] ${method.toUpperCase()} 요청에 CSRF 토큰 추가:`,
+      csrf ? '있음' : '없음',
+    );
+  }
+
+  return config;
+});
+
 API.interceptors.response.use(
-  (res) => res,
-  async (err) => {
-    const original = err.config;
-    if (!original || err.response?.status !== 401 || original._retry) {
-      return Promise.reject(err);
+  (response) => response,
+  async (error) => {
+    const original = error.config;
+
+    if (!original || !error.response) {
+      return Promise.reject(error);
     }
 
-    if (refreshing) {
-      await new Promise((r) => waiters.push(r));
-      original._retry = true;
-      return API(original);
+    const status = error.response.status;
+
+    if (original._retry || original.url?.endsWith('/user/token/refresh')) {
+      return Promise.reject(error);
     }
 
-    try {
-      refreshing = true;
-      await API.post('/user/token/refresh');
-      waiters.forEach((r) => r());
-      waiters = [];
-      original._retry = true;
-      return API(original);
-    } catch (e) {
-      waiters = [];
-      return Promise.reject(e);
-    } finally {
-      refreshing = false;
+    if (status === 401) {
+      if (refreshing) {
+        await new Promise((resolve) => waiters.push(resolve));
+        original._retry = true;
+        return API(original);
+      }
+
+      try {
+        refreshing = true;
+        console.info('[api] 401 감지 refresh 시도');
+
+        await API.post('/user/token/refresh');
+        console.info('[api] refresh 성공');
+
+        waiters.forEach((resolve) => resolve());
+        waiters = [];
+
+        original._retry = true;
+        return API(original);
+      } catch (refreshError) {
+        console.error('[api] refresh 실패:', refreshError?.response?.status);
+
+        waiters.forEach((resolve) => resolve());
+        waiters = [];
+
+        return Promise.reject(refreshError);
+      } finally {
+        refreshing = false;
+      }
     }
+
+    return Promise.reject(error);
   },
 );
