@@ -14,9 +14,9 @@ function mapPayloadToAPI(payload) {
     use_discord: payload.options.discord, // 디스코드 사용 여부
     mic_required: payload.options.mic, // 마이크 필수 여부
     listen_only_allowed: payload.options.listenOnly, // 듣기 전용 허용 여부
-    riot_account_id: payload.riotTag, // 선택된 라이엇 계정 id
+    riot_account_id: Number(payload.riotTag) || 0,
     position: payload.myPositions[0] || null, // 내 포지션(단일)
-    hashtags: payload.lookingFor, // 찾는 포지션 배열
+    hashtags: payload.lookingFor || [],
   };
 }
 
