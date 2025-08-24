@@ -50,8 +50,8 @@ function App() {
 
       {/* 레이아웃 없이 단독 렌더 */}
       <Route path="/login" element={<Login />} />
-      <Route path="/room" element={<RoomPage />} />
-      <Route path="/auth/callback" element={<OAuthCallback />} />
+      <Route path="/room/:room_id" element={<RoomPage />} />
+      <Route path="/kakao-login" element={<OAuthCallback />} />
     </Routes>
   );
 }

@@ -26,7 +26,7 @@ export const OAUTH_CONFIG = {
     color: 'bg-gray-900 hover:bg-black',
   },
   kakao: {
-    url: 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=a04159cc219d093bdcde9d55ea4b88fc&redirect_uri=http://3.34.53.80:8000/kakao-login',
+    url: 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=a04159cc219d093bdcde9d55ea4b88fc&redirect_uri=https://api.lol99.kro.kr/kakao-login',
     logo: kakaoLogo,
     color: 'bg-gray-900 hover:bg-[#FEE500]',
   },

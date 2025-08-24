@@ -1,5 +1,5 @@
 import MatchCard from './MatchCard';
-import { gameModes } from '../data/gameMode';
+import { gameModes } from '@/data/gameMode';
 import { useNavigate } from 'react-router-dom';
 
 function GameModeList() {

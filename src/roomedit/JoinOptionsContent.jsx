@@ -40,42 +40,27 @@ export default function JoinOptionsContent({
   // 제출
   onSubmit,
 }) {
-  // 🔹 title에서 태그 분리 함수
-  const extractTags = (text) => {
-    const regex = /#(\S+)/g;
-    const found = [];
-    let match;
-    while ((match = regex.exec(text))) {
-      found.push(match[1]);
-    }
-    return found;
+  // 🔹 API 요청 스펙에 맞게 payload 변환
+  const buildApiPayload = () => {
+    return {
+      name: title, // 방 제목
+      max_members: capacity, // 최대 인원
+      queue_type: queue, // 큐 타입
+      use_discord: discord, // 디스코드 여부
+      mic_required: mic, // 마이크 필수 여부
+      listen_only_allowed: listenOnly, // 듣기만 허용
+      riot_account_id: riotTag, // 선택된 라이엇 계정 (id)
+      position: Array.from(myPos)[0] || null, // 내 포지션 (단일)
+      hashtags: Array.from(lookingPos ?? []), // 찾는 포지션 배열
+    };
   };
 
   // 🔹 등록 시 처리
   const handleSubmit = () => {
-    const tags = extractTags(title);
-    const cleanTitle = title.replace(/#\S+/g, '').trim();
+    const apiPayload = buildApiPayload();
+    console.log('📦 최종 API Payload:', apiPayload);
 
-    const payload = {
-      title: cleanTitle,
-      tags: tags,
-      queue,
-      discord,
-      mic,
-      listenOnly,
-      myPos: Array.from(myPos),
-      lookingPos: Array.from(lookingPos ?? []),
-      capacity,
-    };
-
-    onSubmit(payload);
-
-    // 🔹 작은 팝업창으로 채팅방 열기
-    window.open(
-      `/room/${payload.title}`,
-      '_blank',
-      'width=670,height=820,left=100,top=100,resizable=no,scrollbars=yes',
-    );
+    onSubmit(apiPayload); // 부모에서 fetch 실행
   };
 
   const isLocked = (k) => Boolean(locks?.[k]);
@@ -113,9 +98,9 @@ export default function JoinOptionsContent({
               className={clsField}
             >
               {riotTags?.length ? (
-                riotTags.map((tag) => (
-                  <option key={tag} value={tag}>
-                    {tag}
+                riotTags.map((acc) => (
+                  <option key={acc.id} value={acc.id}>
+                    {acc.tag}
                   </option>
                 ))
               ) : (
@@ -125,11 +110,11 @@ export default function JoinOptionsContent({
           </div>
 
           <div className="md:col-span-8 lg:col-span-9">
-            {/* 방 제목 + 태그 함께 입력 */}
+            {/* 방 제목 입력 */}
             <input
               value={title}
               onChange={(e) => (isLocked('title') ? null : onChangeTitle(e))}
-              placeholder="예: #골드 #정글 같이 할 분?"
+              placeholder="예: 골드 정글 같이 할 분?"
               className={`${clsField} ${isLocked('title') ? clsLocked : ''}`}
               aria-disabled={isLocked('title')}
             />
@@ -141,10 +126,8 @@ export default function JoinOptionsContent({
       <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-12">
         {/* 내 포지션 */}
         <div className="min-w-0 md:col-span-5 lg:col-span-5">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-sm text-slate-300">나의 포지션</p>
-          </div>
-          <div className="flex flex-nowrap gap-2 whitespace-nowrap overflow-x-auto md:overflow-visible md:whitespace-normal">
+          <p className="mb-2 text-sm text-slate-300">나의 포지션</p>
+          <div className="flex flex-nowrap gap-2 overflow-x-auto">
             {POSITIONS.map((p) => {
               const selected = myPos.has(p.key);
               return (
@@ -156,7 +139,7 @@ export default function JoinOptionsContent({
                   className={[
                     'relative grid size-10 place-items-center rounded-md border transition',
                     selected
-                      ? 'border-[#00BBA3] bg-[#00BBA3]/15 shadow-[0_0_0_1px_rgba(0,187,163,0.25)_inset,0_6px_14px_rgba(0,0,0,0.35)]'
+                      ? 'border-[#00BBA3] bg-[#00BBA3]/15 shadow-[0_0_0_1px_rgba(0,187,163,0.25)_inset]'
                       : 'border-[#2b3240] bg-[#0f141b] hover:bg-[#131a22]',
                   ].join(' ')}
                 >
@@ -175,10 +158,7 @@ export default function JoinOptionsContent({
             onChange={(e) =>
               isLocked('queue') ? null : setQueue(e.target.value)
             }
-            className={[
-              'w-full rounded-md border border-[#2b3240] bg-[#0f141b] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BBA3]',
-              isLocked('queue') ? clsLocked : '',
-            ].join(' ')}
+            className={`${clsField} ${isLocked('queue') ? clsLocked : ''}`}
             aria-disabled={isLocked('queue')}
           >
             {QUEUES.map((q) => (
@@ -191,13 +171,7 @@ export default function JoinOptionsContent({
 
         {/* 옵션 스위치 */}
         <div className="md:col-span-4 lg:col-span-4">
-          <div
-            className={[
-              'space-y-1.5 p-2 text-xs rounded-md',
-              isLocked('options') ? 'opacity-50' : '',
-            ].join(' ')}
-            aria-disabled={isLocked('options')}
-          >
+          <div className={isLocked('options') ? 'opacity-50' : ''}>
             <Switch
               label="디스코드"
               checked={discord}
@@ -234,7 +208,6 @@ export default function JoinOptionsContent({
                 key={p.key}
                 type="button"
                 onClick={() => (canToggleLooking ? toggleLooking(p.key) : null)}
-                title={p.label}
                 className={[
                   'relative grid size-10 place-items-center rounded-md border transition',
                   active
@@ -266,10 +239,9 @@ export default function JoinOptionsContent({
                   className={[
                     'w-10 h-9 rounded-md border transition cursor-pointer',
                     active
-                      ? 'border-[#69e5cf] text-white bg-white/5 shadow-[0_0_0_2px_rgba(105,229,207,0.25)_inset]'
+                      ? 'border-[#69e5cf] bg-white/5 text-white'
                       : 'border-[#6b7280]/40 text-[#b9c2d0]/80 hover:bg-white/5',
                   ].join(' ')}
-                  aria-pressed={active}
                 >
                   {n}
                 </button>
@@ -281,19 +253,18 @@ export default function JoinOptionsContent({
 
       {/* 경고 + 등록 */}
       <p className="mt-5 mb-3 text-xs leading-5 text-rose-400">
-        타인에 대한 모욕, 명예훼손, 성희롱 등의 행위는 상대방의 신고 시 법적
-        처벌을 받을 수 있습니다.
+        타인에 대한 모욕, 명예훼손, 성희롱 등의 행위는 법적 처벌을 받을 수
+        있습니다.
         <br />
-        또한 정지 사유에 해당하는 직,간접적인 단어 언급 시 1년간 이용이 불가할
-        수 있습니다.
+        정지 사유에 해당하는 단어 언급 시 1년간 이용이 불가할 수 있습니다.
       </p>
       <div>
         <button
           type="button"
           onClick={handleSubmit}
-          className="w-full rounded-lg bg-[#00BBA3] px-4 py-3 text-sm font-semibold text-[#0b0f14] hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008f7c] cursor-pointer"
+          className="w-full rounded-lg bg-[#00BBA3] px-4 py-3 text-sm font-semibold text-[#0b0f14] hover:opacity-90 cursor-pointer"
         >
-          {isHost ? '완료' : '참가'}
+          {isHost ? '방 만들기' : '참가'}
         </button>
       </div>
     </div>

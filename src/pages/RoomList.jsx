@@ -1,11 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import Fab from '@/components/Fab';
 import RoomsGridSection from '@/components/RoomsGridSection';
 import TabOptions from '@/components/TabOptions';
 import JoinOptions from '@/components/JoinOptions';
 
-// 기본 큐 옵션
 const DEFAULT_QUEUES = [
   { key: 'all', label: '전체' },
   { key: 'solo_lank', label: '솔로랭크' },
@@ -13,137 +12,209 @@ const DEFAULT_QUEUES = [
   { key: 'aram', label: '칼바람 나락' },
 ];
 
-export default function RoomList({ selectedQueue, onChangeQueue, queues }) {
-  const [openCreate, setOpenCreate] = useState(false);
+export default function RoomList({ queues }) {
+  const [openCreate, setOpenCreate] = useState(false); // 방 만들기 모달
+  const [openJoin, setOpenJoin] = useState(false); // 참가 모달
+  const [joinTargetRoom, setJoinTargetRoom] = useState(null); // 참가할 방 정보
+
   const [rooms, setRooms] = useState([]);
-  const navigate = useNavigate();
+  const [riotTags, setRiotTags] = useState([]);
+  const [selectedQueue, setSelectedQueue] = useState('all');
+  const wsRef = useRef(null);
 
   const items = queues?.length ? queues : DEFAULT_QUEUES;
 
-  // ✅ URL 쿼리스트링에서 초기 탭 값 가져오기
+  // ✅ URL 쿼리스트링에서 초기 큐 값 가져오기
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const initialQueue = queryParams.get('queue') || 'all';
-
-  const [internal, setInternal] = useState(initialQueue);
-  const active = selectedQueue ?? internal;
-  const setActive = (key) =>
-    onChangeQueue ? onChangeQueue(key) : setInternal(key);
-
-  // ✅ WebSocket 상태 저장
-  const [ws, setWs] = useState(null);
-
   useEffect(() => {
-    const token = localStorage.getItem(
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtaWthbjMxQG5hdmVyLmNvbSIsImV4cCI6MTc1NTc4ODI5MH0.PM-Rm2VrYagr_YmDHwAIsiwM2krHOwA2cfvLNqNag7M',
-    ); // 🔑 토큰 가져오기
-    if (!token) {
-      console.error('❌ access_token 없음. 로그인 먼저 필요');
-      return;
-    }
+    const queryParams = new URLSearchParams(location.search);
+    const initialQueue = queryParams.get('queue') || 'all';
+    setSelectedQueue(initialQueue);
+  }, [location.search]);
 
-    // ✅ 토큰을 쿼리스트링으로 붙여서 연결
-    const socket = new WebSocket(
-      `wss://api.lol99.kro.kr/chat/ws/1?token=${token}`,
-    );
+  // ✅ 초기 방 목록 불러오기
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const res = await fetch('https://api.lol99.kro.kr/chat/rooms', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
+        if (!res.ok) throw new Error('방 목록 불러오기 실패');
+        const data = await res.json();
+        console.log('✅ 초기 방 목록:', data);
+        setRooms(data);
+      } catch (err) {
+        console.error('❌ Rooms API 오류:', err);
+      }
+    };
+    fetchRooms();
+  }, []);
 
-    socket.addEventListener('open', () => {
-      console.log('✅ WebSocket 연결됨');
-      socket.send(JSON.stringify({ type: 'rooms:get' })); // 연결되면 방 리스트 요청
-    });
+  // ✅ Riot 계정 불러오기
+  useEffect(() => {
+    const fetchRiotAccounts = async () => {
+      try {
+        const res = await fetch('https://api.lol99.kro.kr/user/riot-accounts', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
+        if (!res.ok) throw new Error('계정 불러오기 실패');
+        const data = await res.json();
+        console.log('✅ 연동된 라이엇 계정:', data);
 
-    socket.addEventListener('message', (event) => {
+        setRiotTags(
+          data.map((acc) => ({
+            id: acc.id,
+            tag: `${acc.game_name}#${acc.tag_line}`,
+          })),
+        );
+      } catch (err) {
+        console.error('❌ Riot Account API 오류:', err);
+      }
+    };
+    fetchRiotAccounts();
+  }, []);
+
+  // ✅ WebSocket 연결 (순수 WebSocket)
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    const ws = new WebSocket(`wss://api.lol99.kro.kr/chat/ws?token=${token}`);
+    wsRef.current = ws;
+
+    ws.onopen = () => console.log('🔌 WebSocket 연결 성공');
+    ws.onclose = () => console.log('❌ WebSocket 연결 종료');
+    ws.onerror = (err) => console.error('⚠️ WebSocket 에러:', err);
+
+    ws.onmessage = (event) => {
       try {
         const msg = JSON.parse(event.data);
-        console.log('📩 서버 메시지:', msg);
+        console.log('📩 WS 이벤트 수신:', msg);
 
-        if (msg.type === 'rooms:list') {
-          setRooms(msg.payload);
+        switch (msg.type) {
+          case 'room_created':
+            setRooms((prev) => [...prev, msg.payload]);
+            break;
+          case 'room_updated':
+            setRooms((prev) =>
+              prev.map((r) =>
+                r.id === msg.payload.id ? { ...r, ...msg.payload } : r,
+              ),
+            );
+            break;
+          case 'room_deleted':
+            setRooms((prev) => prev.filter((r) => r.id !== msg.payload.id));
+            break;
+          default:
+            console.log('알 수 없는 이벤트:', msg);
         }
-
-        if (msg.type === 'room:created') {
-          setRooms((prev) => [msg.payload, ...prev]);
-        }
-      } catch (e) {
-        console.error('WS 메시지 파싱 실패:', e);
+      } catch (err) {
+        console.error('❌ WS 메시지 파싱 오류:', err);
       }
-    });
+    };
 
-    socket.addEventListener('close', () => {
-      console.log('⚠️ WebSocket 연결 종료됨');
-    });
-
-    socket.addEventListener('error', (err) => {
-      console.error('❌ WebSocket 에러:', err);
-    });
-
-    setWs(socket);
-
-    // cleanup
     return () => {
-      socket.close();
+      ws.close();
     };
   }, []);
 
-  // ✅ 메시지 안전하게 보내는 함수
-  const safeSend = (msg) => {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify(msg));
-    } else {
-      console.warn('⚠️ WebSocket 아직 준비 안됨');
-    }
-  };
-
-  // ✅ 현재 탭에 맞는 방만 보여주기
-  const visibleRooms = useMemo(
-    () =>
-      active === 'all' ? rooms : rooms.filter((r) => r.queue_type === active),
-    [active, rooms],
-  );
-
-  // ✅ 방 만들기 (WebSocket 전송)
-  const handleCreate = (payload) => {
-    safeSend({
-      type: 'room:create',
-      payload,
-    });
+  // ✅ 방 생성 성공 핸들러
+  const handleCreate = (room) => {
+    console.log('방 생성 성공:', room);
+    setRooms((prev) => [...prev, room]);
     setOpenCreate(false);
+
+    window.open(
+      `/room/${room.id}`,
+      '_blank',
+      'width=670,height=820,left=100,top=100,resizable=no,scrollbars=yes',
+    );
   };
 
-  // ✅ 방 참가
-  const handleJoin = (room) => {
-    safeSend({
-      type: 'room:join',
-      payload: {
-        roomId: room.id,
-        riotAccountId: 123, // 더미값 (로그인 연동되면 실제 사용자 ID)
-        position: 'mid', // 선택된 포지션
+  // ✅ 방 참가 핸들러
+  const handleJoin = (payload) => {
+    console.log('방 참가 시도:', payload, joinTargetRoom);
+    setOpenJoin(false);
+
+    fetch(`https://api.lol99.kro.kr/chat/rooms/${joinTargetRoom.id}/join`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
-    });
-
-    console.log('방 참가 요청 ✅', room.id);
-    navigate(`/room/${room.id}`);
+      body: JSON.stringify({
+        riot_account_id: payload.riotTag,
+        position: payload.myPositions[0],
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('참가 실패');
+        return res.json();
+      })
+      .then((data) => {
+        console.log('참가 성공:', data);
+        window.open(
+          `/room/${joinTargetRoom.id}`,
+          '_blank',
+          'width=670,height=820,left=100,top=100,resizable=no,scrollbars=yes',
+        );
+      })
+      .catch((err) => {
+        console.error('❌ 참가 API 오류:', err);
+      });
   };
+
+  // ✅ 큐 필터링
+  const filteredRooms =
+    selectedQueue === 'all'
+      ? rooms
+      : rooms.filter((room) => room.queue_type === selectedQueue);
 
   return (
-    <div className="min-h-dvh bg-[#0f1115] text-[#eaeaea]">
-      <TabOptions items={items} value={active} onChange={setActive} />
-
-      <RoomsGridSection
-        rooms={visibleRooms}
-        onClick={(room) => console.log('방 열기', room)}
-        onJoin={handleJoin}
+    <div>
+      {/* 큐 탭 */}
+      <TabOptions
+        items={items}
+        value={selectedQueue}
+        onChange={(key) => setSelectedQueue(key)}
       />
 
-      <Fab onClick={() => setOpenCreate(true)} ariaLabel="방 만들기" />
+      {/* 필터링된 방 목록 */}
+      <RoomsGridSection
+        rooms={filteredRooms}
+        onJoin={(roomId) => {
+          const room = rooms.find((r) => r.id === roomId);
+          setJoinTargetRoom(room);
+          setOpenJoin(true);
+        }}
+      />
 
+      {/* 플로팅 버튼 */}
+      <Fab onClick={() => setOpenCreate(true)}>+</Fab>
+
+      {/* 방 만들기 (Host) */}
       <JoinOptions
         mode="host"
         asModal
         open={openCreate}
         onClose={() => setOpenCreate(false)}
+        riotTags={riotTags}
         onSubmit={(action, payload) => {
           if (action === 'create') handleCreate(payload);
+        }}
+      />
+
+      {/* 방 참가 (Guest) */}
+      <JoinOptions
+        mode="guest"
+        asModal
+        open={openJoin}
+        onClose={() => setOpenJoin(false)}
+        riotTags={riotTags}
+        onSubmit={(action, payload) => {
+          if (action === 'join') handleJoin(payload);
         }}
       />
     </div>

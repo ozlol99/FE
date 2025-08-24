@@ -5,6 +5,21 @@ import { POSITIONS, QUEUES } from '@/roomedit/constants';
 
 const CAPACITY_OPTIONS = [2, 3, 4, 5];
 
+// 👉 API 요청 스펙에 맞게 payload 변환
+function mapPayloadToAPI(payload) {
+  return {
+    name: payload.title, // 방 제목
+    max_members: payload.capacity, // 인원수
+    queue_type: payload.queue, // 큐 타입
+    use_discord: payload.options.discord, // 디스코드 사용 여부
+    mic_required: payload.options.mic, // 마이크 필수 여부
+    listen_only_allowed: payload.options.listenOnly, // 듣기 전용 허용 여부
+    riot_account_id: payload.riotTag, // 선택된 라이엇 계정 id
+    position: payload.myPositions[0] || null, // 내 포지션(단일)
+    hashtags: payload.lookingFor, // 찾는 포지션 배열
+  };
+}
+
 export default function JoinOptions({
   mode = 'guest',
   asModal = false,
@@ -27,6 +42,7 @@ export default function JoinOptions({
 }) {
   const isHost = mode === 'host' || mode === 'edit';
 
+  // 🔹 상태값 관리
   const [riotTag, setRiotTag] = useState(defaultRiotTag || riotTags[0] || '');
   const [title, setTitle] = useState(defaultTitle);
   const [queue, setQueue] = useState(defaultQueue);
@@ -52,21 +68,21 @@ export default function JoinOptions({
 
   const locks = {
     host: {
-      title: false, // 수정 가능
+      title: false,
       queue: false,
       looking: false,
       options: false,
       capacity: false,
     },
     edit: {
-      title: false, // 수정 가능 (host랑 동일)
+      title: false,
       queue: false,
       looking: false,
       options: false,
       capacity: false,
     },
     guest: {
-      title: true, // 수정 불가능
+      title: true,
       queue: true,
       looking: true,
       options: true,
@@ -75,6 +91,7 @@ export default function JoinOptions({
   };
 
   const currentLocks = locks[mode] || locks.guest;
+
   const allow =
     (fn, allow) =>
     (...args) =>
@@ -112,6 +129,7 @@ export default function JoinOptions({
   const setListenOnlyGuard = allow(setListenOnly, isHost);
   const setCapacityGuard = allow(setCapacity, isHost);
 
+  // 🔹 내부 관리용 payload
   const payload = useMemo(
     () => ({
       role: isHost ? 'host' : 'guest',
@@ -137,8 +155,30 @@ export default function JoinOptions({
     ],
   );
 
-  const submitHandler = () => {
-    if (mode === 'host') onSubmit?.('create', payload);
+  // 🔹 API 요청 핸들러
+  const submitHandler = async () => {
+    const apiPayload = mapPayloadToAPI(payload);
+
+    if (mode === 'host') {
+      try {
+        const res = await fetch('https://api.lol99.kro.kr/chat/rooms', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // 필요 시 토큰
+          },
+          body: JSON.stringify(apiPayload),
+        });
+
+        if (!res.ok) throw new Error('방 생성 실패');
+        const data = await res.json();
+        console.log('방 생성 성공:', data);
+        onSubmit?.('create', data);
+      } catch (err) {
+        console.error('❌ API 오류:', err);
+      }
+    }
+
     if (mode === 'guest') onSubmit?.('join', payload);
     if (mode === 'edit') onSubmit?.('update', payload);
   };
@@ -172,7 +212,6 @@ export default function JoinOptions({
         setListenOnly={setListenOnlyGuard}
         lookingPos={lookingPos}
         toggleLooking={toggleLooking}
-        // 🔽 여기만 추가해서 Content가 "찾는 포지션" 아래에 렌더하도록
         isHost={isHost}
         capacity={capacity}
         onChangeCapacity={setCapacityGuard}
