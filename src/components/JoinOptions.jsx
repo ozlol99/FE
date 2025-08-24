@@ -165,8 +165,8 @@ export default function JoinOptions({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // 필요 시 토큰
           },
+          credentials: 'include', //  쿠키 자동 포함
           body: JSON.stringify(apiPayload),
         });
 
