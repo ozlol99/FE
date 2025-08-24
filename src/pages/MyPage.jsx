@@ -70,7 +70,7 @@ import React, { useEffect, useState } from 'react';
 import { getUserMe } from '@/api/user';
 import MyPageHeader from '../components/MyPageHeader';
 import BasicInfoCard from '../components/BasicInfoCard';
-import RiotAccountsCard from './components/RiotAccountsCard';
+import RiotAccountsCard from '../components/RiotAccountsCard';
 import EditProfileModal from '../components/EditProfileModal';
 import PageSkeleton from '../components/PageSkeleton';
 

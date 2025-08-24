@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { X, Loader2 } from 'lucide-react';
-import { updateMe } from '@/api/user'; // ensure this API exists; fallback code below
+import { updateUserMe } from '@/api/user';
 
 function dateInputToUTCISO(yyyyMmDd) {
   if (!yyyyMmDd) return null;
@@ -11,7 +11,7 @@ function dateInputToUTCISO(yyyyMmDd) {
 export default function EditProfileModal({ initial, onClose, onUpdated }) {
   const [form, setForm] = useState({
     nickname: initial?.nickname ?? '',
-    gender: initial?.gender ?? null, // backend currently boolean? true: male, false: female
+    gender: initial?.gender ?? null,
     birthday: initial?.birthday ? initial.birthday.slice(0, 10) : '',
   });
   const [submitting, setSubmitting] = useState(false);
@@ -25,7 +25,6 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
     if (!canSubmit || submitting) return;
     setSubmitting(true);
 
-    // NOTE: Swagger shows: { "user": string, "gender": true, "birthday": ISO }
     const payload = {
       user: form.nickname.trim(),
       gender:
@@ -41,9 +40,8 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
 
     try {
       if (typeof updateMe === 'function') {
-        await updateMe(payload);
+        await updateUserMe(payload);
       } else {
-        // fallback axios
         const res = await fetch(
           `${import.meta.env.VITE_API_BASE || 'https://api.lol99.kro.kr'}/user/me`,
           {
@@ -55,7 +53,6 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
         );
         if (!res.ok) throw new Error('PATCH /user/me failed');
       }
-      // optimistic UI patch for fields we know
       onUpdated?.({
         nickname: payload.user,
         gender: payload.gender,

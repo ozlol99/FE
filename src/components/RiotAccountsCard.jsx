@@ -22,7 +22,9 @@ export default function RiotAccountsCard({ user, setUser }) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-base text-[#a7a7a7]">연결된 계정</h2>
-          <h3 className="text-xl font-semibold mt-1">라이엇 게임즈</h3>
+          <h3 className="text-xl text-white font-semibold mt-1">
+            라이엇 게임즈
+          </h3>
         </div>
         <button
           type="button"
