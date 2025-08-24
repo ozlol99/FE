@@ -58,7 +58,7 @@ export default function AddRiotModal({ onClose, onSubmit }) {
               className="p-2 rounded-lg hover:bg-white/5"
               aria-label="닫기"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
           <div className="px-5 py-4 space-y-4">
@@ -91,14 +91,14 @@ export default function AddRiotModal({ onClose, onSubmit }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-2 text-white rounded-lg border border-[#5b5b5b] hover:bg-[#3a3a3a]"
+              className="px-3 py-2 text-white rounded-lg border border-[#5b5b5b] hover:bg-[#3a3a3a] cursor-pointer"
             >
               취소
             </button>
             <button
               type="submit"
               disabled={!canSubmit || submitting}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-500/90 hover:bg-teal-400 text-black font-medium disabled:opacity-60"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-500/90 hover:bg-teal-400 text-black font-medium disabled:opacity-60 cursor-pointer"
             >
               {submitting ? (
                 <>

@@ -13,7 +13,7 @@ export const POSITIONS = [
 ];
 
 export const QUEUES = [
-  { key: 'solo', label: '솔로랭크' },
+  { key: 'solo_lank', label: '솔로랭크' },
   { key: 'flex', label: '자유랭크' },
   { key: 'aram', label: '칼바람 나락' },
 ];

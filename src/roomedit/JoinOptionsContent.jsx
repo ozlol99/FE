@@ -94,12 +94,12 @@ export default function JoinOptionsContent({
           <div className="md:col-span-4 lg:col-span-3">
             <select
               value={riotTag}
-              onChange={(e) => onChangeRiotTag(e.target.value)}
+              onChange={(e) => onChangeRiotTag(Number(e.target.value))}
               className={clsField}
             >
               {riotTags?.length ? (
                 riotTags.map((acc) => (
-                  <option key={acc.id} value={acc.id}>
+                  <option key={acc.id} value={Number(acc.id)}>
                     {acc.tag}
                   </option>
                 ))

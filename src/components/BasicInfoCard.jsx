@@ -25,7 +25,7 @@ export default function BasicInfoCard({
         <button
           type="button"
           onClick={onEdit}
-          className="px-3 py-1.5 text-white rounded-xl border border-[#5b5b5b] hover:bg-[#3a3a3a] text-sm"
+          className="px-3 py-1.5 text-white rounded-xl border border-[#5b5b5b] hover:bg-[#3a3a3a] text-sm cursor-pointer"
         >
           수정
         </button>

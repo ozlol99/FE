@@ -46,7 +46,7 @@ export default function RiotAccountsCard({ user, setUser }) {
               className="flex items-center justify-between py-3"
             >
               <div className="min-w-0">
-                <p className="font-medium truncate">
+                <p className="font-medium truncate text-white">
                   {acct.game_name}#{acct.tag_line}
                 </p>
                 {acct.region && (
@@ -56,7 +56,7 @@ export default function RiotAccountsCard({ user, setUser }) {
               <button
                 type="button"
                 onClick={() => removeOne(acct.id)}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#3A3A3A] border border-[#5b5b5b] hover:bg-[#454545] text-[#eee]"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#3A3A3A] border border-[#5b5b5b] hover:bg-[#454545] text-[#eee] cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" /> 삭제
               </button>
