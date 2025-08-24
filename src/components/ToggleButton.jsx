@@ -1,37 +1,45 @@
-import { useState } from 'react';
+import React, { memo } from 'react';
 
-function ToggleButton() {
-  const [selectedGender, setSelectedGender] = useState('남');
+function ToggleButton({ value, onChange, name = 'gender', disabled = false }) {
+  const options = [
+    { label: '남', val: false },
+    { label: '여', val: true },
+  ];
 
   return (
-    <>
-      <div className="w-full h-[55px] bg-[#3f3f3f] rounded-md border border-[#787878] flex items-center justify-around px-2 text-white">
-        {['남', '여'].map((gender, idx) => (
+    <div
+      className={`w-full h-[55px] bg-[#3f3f3f] rounded-md border border-[#787878] flex items-center justify-around px-2 text-white ${disabled ? 'opacity-60 pointer-events-none' : ''}`}
+      role="radiogroup"
+      aria-label="성별"
+      aria-disabled={disabled}
+    >
+      {options.map((opt, idx) => {
+        const selected = value === opt.val;
+        return (
           <label
-            key={gender}
+            key={String(opt.val)}
             className={`relative flex-1 text-center cursor-pointer p-2 ${
-              selectedGender === gender ? 'bg-[#313131]' : ''
-            }
-            ${gender === '남' ? 'rounded-l-md' : 'rounded-r-md'}
-            `}
+              selected ? 'bg-[#313131]' : ''
+            } ${opt.val === true ? 'rounded-l-md' : 'rounded-r-md'}`}
           >
             <input
               type="radio"
-              name="gender"
-              value={gender}
-              checked={selectedGender === gender}
-              onChange={() => setSelectedGender(gender)}
+              name={name}
+              value={String(opt.val)}
+              checked={selected}
+              onChange={() => onChange(opt.val)}
               className="hidden"
+              disabled={disabled}
             />
-            {gender}
+            {opt.label}
             {idx === 0 && (
               <span className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-[20px] bg-white opacity-50" />
             )}
           </label>
-        ))}
-      </div>
-    </>
+        );
+      })}
+    </div>
   );
 }
 
-export default ToggleButton;
+export default memo(ToggleButton);
