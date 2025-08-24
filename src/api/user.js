@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://api.lol99.kro.kr'; // 실제 API 주소로 변경
+const BASE_URL = 'https://api.lol99.kro.kr'; // 실제 API 주소로 변경
 
 export async function addLikeAPI(fromUserId, toUserId) {
   try {
