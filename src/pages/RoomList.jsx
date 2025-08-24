@@ -54,7 +54,7 @@ export default function RoomList({ queues }) {
   useEffect(() => {
     const fetchRiotAccounts = async () => {
       try {
-        const res = await fetch('https://api.lol99.kro.kr/user/riot-accounts', {
+        const res = await fetch('http://api.lol99.kro.kr/user/riot-accounts', {
           credentials: 'include', // ✅ 쿠키 포함
         });
         if (!res.ok) throw new Error('계정 불러오기 실패');

@@ -161,7 +161,7 @@ export default function JoinOptions({
 
     if (mode === 'host') {
       try {
-        const res = await fetch('https://api.lol99.kro.kr/chat/rooms', {
+        const res = await fetch('http://api.lol99.kro.kr/chat/rooms', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
