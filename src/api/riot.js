@@ -108,7 +108,6 @@ export async function getSummonerInfo(name, tag) {
   try {
     const res = await axios.get(
       `${API}/riot/summoner-info/${encodeName}/${encodeTag}`,
-      { withCredentials: true },
     );
     return res.data;
   } catch (err) {
