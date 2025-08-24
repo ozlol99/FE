@@ -5,13 +5,28 @@ import { POSITIONS, QUEUES } from '@/roomedit/constants';
 
 const CAPACITY_OPTIONS = [2, 3, 4, 5];
 
+// 👉 API 요청 스펙에 맞게 payload 변환
+function mapPayloadToAPI(payload) {
+  return {
+    name: payload.title, // 방 제목
+    max_members: payload.capacity, // 인원수
+    queue_type: payload.queue, // 큐 타입
+    use_discord: payload.options.discord, // 디스코드 사용 여부
+    mic_required: payload.options.mic, // 마이크 필수 여부
+    listen_only_allowed: payload.options.listenOnly, // 듣기 전용 허용 여부
+    riot_account_id: payload.riotTag, // 선택된 라이엇 계정 id
+    position: payload.myPositions[0] || null, // 내 포지션(단일)
+    hashtags: payload.lookingFor, // 찾는 포지션 배열
+  };
+}
+
 export default function JoinOptions({
   mode = 'guest',
   asModal = false,
   open = false,
   onClose,
   backdropClosable = false,
-  titleText = '방 만들기',
+  titleText,
   riotTags = [],
   defaultRiotTag = '',
   defaultTitle = '',
@@ -22,11 +37,12 @@ export default function JoinOptions({
   defaultMic = true,
   defaultListenOnly = false,
   defaultCapacity = 5,
-  maxMyPositions = 2,
+  maxMyPositions = 1,
   onSubmit,
 }) {
-  const isHost = mode === 'host';
+  const isHost = mode === 'host' || mode === 'edit';
 
+  // 🔹 상태값 관리
   const [riotTag, setRiotTag] = useState(defaultRiotTag || riotTags[0] || '');
   const [title, setTitle] = useState(defaultTitle);
   const [queue, setQueue] = useState(defaultQueue);
@@ -41,6 +57,40 @@ export default function JoinOptions({
 
   const myCount = myPos.size;
   const myLimitReached = myCount >= maxMyPositions;
+
+  const titleMap = {
+    host: '방 만들기',
+    guest: '방 참가하기',
+    edit: '방 수정하기',
+  };
+
+  const titleLabel = titleText || titleMap[mode];
+
+  const locks = {
+    host: {
+      title: false,
+      queue: false,
+      looking: false,
+      options: false,
+      capacity: false,
+    },
+    edit: {
+      title: false,
+      queue: false,
+      looking: false,
+      options: false,
+      capacity: false,
+    },
+    guest: {
+      title: true,
+      queue: true,
+      looking: true,
+      options: true,
+      capacity: true,
+    },
+  };
+
+  const currentLocks = locks[mode] || locks.guest;
 
   const allow =
     (fn, allow) =>
@@ -79,6 +129,7 @@ export default function JoinOptions({
   const setListenOnlyGuard = allow(setListenOnly, isHost);
   const setCapacityGuard = allow(setCapacity, isHost);
 
+  // 🔹 내부 관리용 payload
   const payload = useMemo(
     () => ({
       role: isHost ? 'host' : 'guest',
@@ -104,20 +155,41 @@ export default function JoinOptions({
     ],
   );
 
-  const submitHandler = () => onSubmit?.(payload);
+  // 🔹 API 요청 핸들러
+  const submitHandler = async () => {
+    const apiPayload = mapPayloadToAPI(payload);
+
+    if (mode === 'host') {
+      try {
+        const res = await fetch('https://api.lol99.kro.kr/chat/rooms', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // 필요 시 토큰
+          },
+          body: JSON.stringify(apiPayload),
+        });
+
+        if (!res.ok) throw new Error('방 생성 실패');
+        const data = await res.json();
+        console.log('방 생성 성공:', data);
+        onSubmit?.('create', data);
+      } catch (err) {
+        console.error('❌ API 오류:', err);
+      }
+    }
+
+    if (mode === 'guest') onSubmit?.('join', payload);
+    if (mode === 'edit') onSubmit?.('update', payload);
+  };
 
   const card = (
     <div className="w-full max-w-[620px] rounded-2xl border border-[#2b3240]/80 bg-gradient-to-b from-[#1a1f29] to-[#0f141b] shadow-[0_12px_28px_rgba(0,0,0,0.55)]">
       <JoinOptionsContent
         asModal={asModal}
-        titleText={titleText}
+        titleText={titleLabel}
         onClose={onClose}
-        locks={{
-          title: !isHost,
-          queue: !isHost,
-          looking: !isHost,
-          options: !isHost,
-        }}
+        locks={currentLocks}
         riotTags={riotTags}
         riotTag={riotTag}
         onChangeRiotTag={setRiotTag}
@@ -140,18 +212,20 @@ export default function JoinOptions({
         setListenOnly={setListenOnlyGuard}
         lookingPos={lookingPos}
         toggleLooking={toggleLooking}
-        // 🔽 여기만 추가해서 Content가 "찾는 포지션" 아래에 렌더하도록
         isHost={isHost}
         capacity={capacity}
         onChangeCapacity={setCapacityGuard}
         capacityOptions={CAPACITY_OPTIONS}
+        submitLabel={
+          mode === 'host' ? '방 만들기' : mode === 'edit' ? '수정 완료' : '참가'
+        }
         onSubmit={submitHandler}
       />
     </div>
   );
 
   if (!asModal) return card;
-
+  console.log('JoinOptions open:', open, 'mode:', mode);
   return (
     <ModalShell
       open={!!open}

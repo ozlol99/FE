@@ -20,11 +20,13 @@ export default function ModalShell({
 
     // 최초 포커스
     const el = panelRef.current;
-    const first =
-      el?.querySelector(
-        'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',
-      ) || el;
-    first?.focus?.();
+    if (el) {
+      const first =
+        el.querySelector(
+          'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',
+        ) || el;
+      first?.focus?.();
+    }
 
     return () => {
       document.body.style.overflow = prev || '';

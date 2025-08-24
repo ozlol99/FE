@@ -1,5 +1,5 @@
-function UserProfile({ summoner, account }) {
-  const profileIconUrl = `https://ddragon.leagueoflegends.com/cdn/14.15.1/img/profileicon/${summoner?.profileIconId}.png`;
+function UserProfile({ profile }) {
+  const profileIconUrl = `https://ddragon.leagueoflegends.com/cdn/14.15.1/img/profileicon/${profile?.profileIconId}.png`;
   return (
     <div className="flex h-[270px] w-full p-3.5 justify-center">
       <div className="flex flex-1 w-full bg-[#7d7d7d] max-w-4x gap-4">
@@ -9,13 +9,13 @@ function UserProfile({ summoner, account }) {
             <div className="relative  w-[80px] h-[80px] sm:w-[100px] sm:h-[100px]">
               <img
                 src={profileIconUrl}
-                alt={account?.gameNam}
+                alt={profile?.name}
                 className="w-full h-full object-cover rounded-4xl"
               />
               {/* 레벨 배지 */}
               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1/2 h-5">
                 <span className="bg-stone-800 rounded-2xl text-xs font-bold h-full w-full flex justify-center items-center text-white">
-                  {summoner?.summonerLevel}
+                  {profile?.summonerLevel}
                 </span>
               </div>
             </div>
@@ -23,10 +23,11 @@ function UserProfile({ summoner, account }) {
           {/* 추가적인 정보 나중에 넣기 */}
           <div className="flex flex-1 flex-col w-[100px] h-full gap-3 justify-between">
             <div className="flex gap-2 text-2xl font-bold">
-              {account?.gameName}
-              <span className="text-gray-300">#{account?.tagLine}</span>
+              {profile?.name}
+              <span className="text-gray-300">#{profile?.tag}</span>
             </div>
             <div>
+              {/* 갱신시 새로고침 click 이벤트 작성 */}
               <button className="bg-[#00BBA3] text-white hover:bg-cyan-600 hover:dark:bg-cyan-900 text-sm px-4 h-10 align-middle rounded-xl justify-center box-border disabled:bg-gray-200 disabled:text-gray-300 relative flex items-center gap-1">
                 <span>전적갱신</span>
               </button>
