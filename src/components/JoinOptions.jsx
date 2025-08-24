@@ -8,15 +8,15 @@ const CAPACITY_OPTIONS = [2, 3, 4, 5];
 // 👉 API 요청 스펙에 맞게 payload 변환
 function mapPayloadToAPI(payload) {
   return {
-    name: payload.title, // 방 제목
-    max_members: payload.capacity, // 인원수
-    queue_type: payload.queue, // 큐 타입
-    use_discord: payload.options.discord, // 디스코드 사용 여부
-    mic_required: payload.options.mic, // 마이크 필수 여부
-    listen_only_allowed: payload.options.listenOnly, // 듣기 전용 허용 여부
-    riot_account_id: payload.riotTag, // 선택된 라이엇 계정 id
-    position: payload.myPositions[0] || null, // 내 포지션(단일)
-    hashtags: payload.lookingFor, // 찾는 포지션 배열
+    name: payload.title || '', // string
+    max_members: Number(payload.capacity) || 2, // number
+    queue_type: payload.queue || 'solo_lank', // string
+    use_discord: Boolean(payload.options.discord), // boolean
+    mic_required: Boolean(payload.options.mic), // boolean
+    listen_only_allowed: Boolean(payload.options.listenOnly), // boolean
+    riot_account_id: Number(payload.riotTag) || 0, // number (반드시 Number)
+    position: payload.myPositions[0] || 'top', // string (null 말고 기본값)
+    hashtags: Array.isArray(payload.lookingFor) ? payload.lookingFor : [], // string[]
   };
 }
 
