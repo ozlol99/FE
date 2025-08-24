@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { updateUserMe } from '@/api/user';
+import GenderToggle from '@/components/ToggleButton';
 
 function dateInputToUTCISO(yyyyMmDd) {
   if (!yyyyMmDd) return null;
@@ -14,6 +15,7 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
     gender: initial?.gender ?? null,
     birthday: initial?.birthday ? initial.birthday.slice(0, 10) : '',
   });
+
   const [submitting, setSubmitting] = useState(false);
 
   const canSubmit = useMemo(() => form.nickname.trim().length > 0, [form]);
@@ -27,14 +29,7 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
 
     const payload = {
       user: form.nickname.trim(),
-      gender:
-        form.gender === ''
-          ? null
-          : form.gender === 'true'
-            ? true
-            : form.gender === 'false'
-              ? false
-              : form.gender,
+      gender: form.gender,
       birthday: form.birthday ? dateInputToUTCISO(form.birthday) : null,
     };
 
@@ -84,7 +79,10 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
           className="w-full max-w-md rounded-2xl bg-[#2e2e2e] border border-[#565656] shadow-xl"
         >
           <div className="flex items-center justify-between px-5 py-4 border-b border-[#4a4a4a]">
-            <h3 id="edit-profile-title" className="text-lg font-semibold">
+            <h3
+              id="edit-profile-title"
+              className="text-lg font-semibold text-white"
+            >
               회원 정보 수정
             </h3>
             <button
@@ -103,44 +101,16 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
               <input
                 value={form.nickname}
                 onChange={onChange('nickname')}
-                className="w-full rounded-xl bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50"
+                className="w-full rounded-xl text-white bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50"
               />
             </label>
 
             <div>
               <span className="block text-sm text-[#bdbdbd] mb-1">성별</span>
-              <div className="flex gap-3 text-sm">
-                <label className="inline-flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="true"
-                    checked={String(form.gender) === 'true'}
-                    onChange={onChange('gender')}
-                  />{' '}
-                  남
-                </label>
-                <label className="inline-flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="false"
-                    checked={String(form.gender) === 'false'}
-                    onChange={onChange('gender')}
-                  />{' '}
-                  여
-                </label>
-                <label className="inline-flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value=""
-                    checked={form.gender === null || form.gender === ''}
-                    onChange={() => setForm((f) => ({ ...f, gender: '' }))}
-                  />{' '}
-                  선택 안함
-                </label>
-              </div>
+              <GenderToggle
+                value={form.gender}
+                onChange={(g) => setForm((f) => ({ ...f, gender: g }))}
+              />
             </div>
 
             <label className="block">
@@ -149,7 +119,7 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
                 type="date"
                 value={form.birthday}
                 onChange={onChange('birthday')}
-                className="w-full rounded-xl bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50"
+                className="w-full rounded-xl text-white bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50"
               />
             </label>
           </div>
@@ -158,7 +128,7 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-2 rounded-lg border border-[#5b5b5b] hover:bg-[#3a3a3a]"
+              className="px-3 py-2 text-white rounded-lg border border-[#5b5b5b] hover:bg-[#3a3a3a]"
             >
               취소
             </button>

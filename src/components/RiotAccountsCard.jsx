@@ -32,7 +32,7 @@ export default function RiotAccountsCard({ user, setUser }) {
           aria-label="라이엇 계정 추가"
           className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl border border-[#45e0c4]/40 hover:border-[#45e0c4] bg-[#353535] hover:bg-[#3b3b3b] transition"
         >
-          <Plus className="w-4 h-4" /> 추가
+          <Plus className="w-4 h-4 text-white" /> 추가
         </button>
       </div>
 

@@ -46,7 +46,10 @@ export default function AddRiotModal({ onClose, onSubmit }) {
           className="w-full max-w-md rounded-2xl bg-[#2e2e2e] border border-[#565656] shadow-xl"
         >
           <div className="flex items-center justify-between px-5 py-4 border-b border-[#4a4a4a]">
-            <h3 id="add-riot-title" className="text-lg font-semibold">
+            <h3
+              id="add-riot-title"
+              className="text-lg text-white font-semibold"
+            >
               라이엇 계정 추가
             </h3>
             <button
@@ -67,7 +70,7 @@ export default function AddRiotModal({ onClose, onSubmit }) {
                 value={form.game_name}
                 onChange={handle('game_name')}
                 placeholder="예: Hide on bush"
-                className="w-full rounded-xl bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50"
+                className="w-full rounded-xl text-white bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50"
               />
             </label>
             <label className="block">
@@ -76,7 +79,7 @@ export default function AddRiotModal({ onClose, onSubmit }) {
                 value={form.tag_line}
                 onChange={handle('tag_line')}
                 placeholder="예: KR1"
-                className="w-full rounded-xl bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm tracking-wide focus:outline-none focus:ring-2 focus:ring-teal-400/50"
+                className="w-full rounded-xl text-white bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm tracking-wide focus:outline-none focus:ring-2 focus:ring-teal-400/50"
               />
             </label>
             <p className="text-xs text-[#9b9b9b]">
@@ -88,7 +91,7 @@ export default function AddRiotModal({ onClose, onSubmit }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-2 rounded-lg border border-[#5b5b5b] hover:bg-[#3a3a3a]"
+              className="px-3 py-2 text-white rounded-lg border border-[#5b5b5b] hover:bg-[#3a3a3a]"
             >
               취소
             </button>

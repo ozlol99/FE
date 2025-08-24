@@ -97,9 +97,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CustomInput from '@/components/CustomInput';
 import GenderToggle from '@/components/ToggleButton';
 
-// const API_BASE = import.meta.env.VITE_API_BASE || 'http://api.lol99.kro.kr';
-const API_BASE = 'https://3.34.53.80:8000';
-
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://api.lol99.kro.kr';
 const ADD_INFO_ENDPOINT = `${API_BASE}/user/register`;
 
 function dateInputToUTCISO(yyyyMmDd) {
@@ -123,7 +121,7 @@ export default function SignupAddInfo() {
   const [form, setForm] = useState({
     nickname: '',
     birth: '',
-    gender: false,
+    gender: null, // boolean | null (남=true, 여=false, 미선택=null)
     agree: false,
   });
   const [submitting, setSubmitting] = useState(false);
@@ -136,7 +134,7 @@ export default function SignupAddInfo() {
     if (
       !form.nickname ||
       !form.birth ||
-      typeof form.gender !== 'boolean' ||
+      typeof form.gender !== 'boolean' || // 남/여 반드시 선택
       !form.agree
     ) {
       setError('모든 항목을 입력하고 약관에 동의해주세요.');
@@ -147,28 +145,30 @@ export default function SignupAddInfo() {
       email,
       user: form.nickname,
       google_or_kakao: provider,
-      gender: Boolean(form.gender),
+      gender: form.gender, // 이미 boolean
       birthday: dateInputToUTCISO(form.birth),
     };
 
     try {
       setSubmitting(true);
       setError(null);
-      // const ADD_INFO_ENDPOINT = `${API_BASE}/user/register`;
+
       const res = await fetch(ADD_INFO_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(payload),
       });
-      if (res.ok) return navigate('/', { replace: true });
+
+      if (res.ok) {
+        return navigate('/', { replace: true });
+      }
 
       const data = await res.json().catch(() => ({}));
       setError(data?.message || data?.detail || '추가정보 저장 실패');
-    } catch {
+    } catch (err) {
+      console.error('[SignupAddInfo] request failed', err);
       setError('네트워크 오류가 발생했습니다.');
-      alert('오류');
-      navigate('/');
     } finally {
       setSubmitting(false);
     }
@@ -202,10 +202,12 @@ export default function SignupAddInfo() {
           <label className="mb-1 text-xs font-semibold text-[#b0b0b0]">
             성별
           </label>
-          <div className="w-full flex justify-end">
+          <div className="w-full">
             <GenderToggle
-              value={form.gender}
-              onChange={(gender) => setForm((f) => ({ ...f, gender }))}
+              value={form.gender} // boolean | null
+              onChange={(genderBoolean) =>
+                setForm((f) => ({ ...f, gender: genderBoolean }))
+              }
             />
           </div>
         </div>
