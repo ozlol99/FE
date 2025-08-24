@@ -1,6 +1,7 @@
 import { tierImages } from '@/data/tierImages';
+import PositionUsageBars from './PositionUsageBars';
 
-function PlayerInfo({ ranks, highest }) {
+function PlayerInfo({ ranks, highest, summary }) {
   const solo = ranks?.solo || null;
 
   // 2) 현재 솔랭 없으면 최고티어로 폴백
@@ -51,7 +52,14 @@ function PlayerInfo({ ranks, highest }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row gap-4">{/* 포지션별 */}</div>
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1 border border-stone-400 rounded-lg p-2">
+          <div className="text-sm font-light text-center text-white">
+            포지션별 플레이 횟수
+          </div>
+          <PositionUsageBars byPosition={summary?.byPosition} />
+        </div>
+      </div>
     </div>
   );
 }

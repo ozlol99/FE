@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { API } from '@/lib/api';
+import { logoutUser } from '../api/user';
 
 const AuthCtx = createContext(null);
 
@@ -81,16 +82,15 @@ export function AuthProvider({ children }) {
       }
     })();
   }, []);
-
   const logout = async () => {
     try {
-      await API.delete('/user/logout'); // 이 부분이 성공해야
+      await logoutUser();
       console.info('[auth] 로그아웃 완료');
-      setUser(null); // 클라이언트 상태를 초기화
+
+      setUser(null);
       setTokens({ accessOk: false, refreshOk: false, lastError: null });
     } catch (error) {
       console.error('[auth] 로그아웃 API 실패:', error);
-      // API 실패 시 사용자에게 알림
       alert('로그아웃에 실패했습니다. 다시 시도해 주세요.');
     }
   };
