@@ -10,11 +10,29 @@ export const positionIcons = {
   TOP: TopIcon,
   JUNGLE: JungleIcon,
   MID: MidIcon,
-  MIDDLE: MidIcon,
   BOTTOM: BotIcon,
   SUPPORT: SupportIcon,
-  UTILITY: SupportIcon,
 };
+
+export function normalizePosition(position) {
+  const key = String(position || '').toUpperCase();
+
+  switch (key) {
+    case 'MIDDLE':
+      return 'MID';
+    case 'BOT':
+    case 'BOTTOM':
+      return 'BOTTOM';
+    case 'UTILITY':
+      return 'SUPPORT';
+    case 'NONE':
+      return 'ALL';
+    case 'SOLO':
+      return 'TOP';
+    default:
+      return key;
+  }
+}
 
 export function getPositionIcon(position) {
   const key = String(position || '').toUpperCase();

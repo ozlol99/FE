@@ -89,8 +89,9 @@ export default function JoinOptionsContent({
           <div className="md:col-span-4 lg:col-span-3">
             <select
               value={riotTag}
-              onChange={(e) => onChangeRiotTag(Number(e.target.value))}
               className={clsField}
+              onChange={(e) => onChangeRiotTag(e.target.value)} // ❌ Number(...) 강제하지 말고 원래대로 돌림
+
             >
               {riotTags?.length ? (
                 riotTags.map((acc) => (

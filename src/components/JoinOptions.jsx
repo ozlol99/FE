@@ -44,11 +44,7 @@ export default function JoinOptions({
 
   // 🔹 상태값 관리
   const [riotTag, setRiotTag] = useState(
-    defaultRiotTag
-      ? Number(defaultRiotTag)
-      : riotTags.length > 0
-        ? Number(riotTags[0].id)
-        : 0,
+    defaultRiotTag || riotTags[0]?.id || '',
   );
   const [title, setTitle] = useState(defaultTitle);
   const [queue, setQueue] = useState(defaultQueue);
