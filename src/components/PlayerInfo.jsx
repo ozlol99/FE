@@ -1,28 +1,32 @@
 import { tierImages } from '@/data/tierImages';
 
-function PlayerInfo({ rank }) {
-  if (!rank) return '';
-  const solo = rank?.find((e) => e.queueType === 'RANKED_SOLO_5x5');
-  const tier = solo?.tier;
-  const lp = solo?.leaguePoints;
+function PlayerInfo({ ranks, highest }) {
+  const solo = ranks?.solo || null;
 
-  function formatTier(tier, rank) {
+  // 2) 현재 솔랭 없으면 최고티어로 폴백
+  const tier = solo?.tier || highest?.highest_solo_tier || 'UNRANKED';
+  const division = solo?.rank || highest?.highest_solo_rank || '';
+  const lp = solo?.league_points ?? highest?.highest_solo_lp ?? 0;
+  const wins = solo?.wins ?? 0;
+  const losses = solo?.losses ?? 0;
+  const total = wins + losses;
+  const winRate = total > 0 ? (solo?.win_rate ?? (wins / total) * 100) : 0;
+
+  function formatTier(tier, rnk) {
     const upperTiers = ['MASTER', 'GRANDMASTER', 'CHALLENGER'];
-    return upperTiers.includes(tier) ? tier : `${tier} ${rank}`;
+    if (!tier) return 'UNRANKED';
+    return upperTiers.includes(tier) ? tier : `${tier} ${rnk || ''}`.trim();
   }
 
-  const displayTier = formatTier(solo?.tier, solo?.rank);
+  const displayTier = formatTier(tier, division);
+  const tierImg = tierImages?.[tier]; // 없으면 로고 숨김
 
   return (
     <div className="flex flex-col w-full gap-3 p-3 h-[200px]">
       <div className=" flex w-full h-full gap-2.5 border justify-center items-center border-stone-400 rounded-xl">
         <div className="flex justify-center items-center w-24 h-24 ">
-          {tier !== '-' && (
-            <img
-              src={tierImages[tier]}
-              alt={tier}
-              className=" object-contain "
-            />
+          {tierImg && (
+            <img src={tierImg} alt={tier} className="object-contain" />
           )}
         </div>
         <div className="flex flex-col gap-2.5 justify-center items-start">
@@ -33,15 +37,16 @@ function PlayerInfo({ rank }) {
           <div className="flex flex-col gap-2.5 justify-center items-end">
             <div className="flex flex-col gap-1.5">
               <span className="font-light text-sm text-stone-300">
-                {solo?.wins} 승
+                {wins} 승
               </span>
               <span className="font-light text-sm text-stone-300">
-                {solo?.losses} 패
+                {losses} 패
               </span>
             </div>
             <span className="font-light text-sm text-stone-300">승률</span>
             <span className="font-light text-sm text-stone-300">
-              {((solo?.wins / (solo?.losses + solo?.wins)) * 100).toFixed(2)} %
+              {/* 기존에 nan 으로 뜨는 경우가 있어서 무한대/NaN 아님 인지 확인 */}
+              {Number.isFinite(winRate) ? winRate.toFixed(2) : '0.00'} %
             </span>
           </div>
         </div>
