@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
 import UserProfile from '../components/UserProfile';
-// import {
-//   getAccountByRiotId,
-//   getSummonerByPuuid,
-//   getLeagueByPuuid,
-//   getRecentMatchIds,
-//   getMatchById,
-// } from '@/api/riot';
 import PlayerInfo from '../components/PlayerInfo';
 import PlayerMatchInfo from '../components/PlayerMatchInfo';
 import { useParams } from 'react-router-dom';
@@ -38,73 +31,26 @@ function MatchHistorych() {
     };
   }, [name, tag]);
 
+  // 전적 갱신 핸들러
+  async function handleRefresh() {
+    const raw = await getSummonerInfo(name, tag);
+    setView(mapSummonerInfo(raw));
+  }
+
   if (err) return <div className="p-4">불러오기 실패</div>;
   if (!view) return <div className="p-4">로딩...</div>;
 
   const { profile, ranks, highest, summary, matches } = view;
 
-  // useEffect(() => {
-  //   let mounted = true;
-
-  //   async function fetchUserData() {
-  //     try {
-  //       // 1) 기본 계정/소환사/랭크
-  //       const accountData = await getAccountByRiotId(name, tag);
-  //       if (!mounted) return;
-  //       setAccount(accountData);
-
-  //       const summonerData = await getSummonerByPuuid(accountData.puuid);
-  //       if (!mounted) return;
-  //       setSummoner(summonerData);
-
-  //       const rankData = await getLeagueByPuuid(accountData.puuid);
-  //       if (!mounted) return;
-  //       setRank(rankData);
-
-  //       // 2) 최근 매치 ID들
-  //       const ids = await getRecentMatchIds(accountData.puuid, 20);
-
-  //       // 3) 상세 매치 정보 병렬 호출 (실패는 건너뛰기)
-  //       const infos = await Promise.all(
-  //         (ids || []).map((id) =>
-  //           getMatchById(id).catch((err) => {
-  //             console.error(
-  //               'getMatchById fail:',
-  //               id,
-  //               err?.response?.data || err?.message,
-  //             );
-  //             return null;
-  //           }),
-  //         ),
-  //       );
-
-  //       if (!mounted) return;
-  //       setMatchesInfo(infos.filter(Boolean));
-  //     } catch (err) {
-  //       console.error(
-  //         'fetchUserData error:',
-  //         err?.response?.data || err?.message,
-  //       );
-  //     }
-  //   }
-
-  //   fetchUserData();
-  //   return () => {
-  //     mounted = false;
-  //   };
-  // }, [name, tag]);
-
   return (
     <div className="flex justify-center flex-col items-center ">
-      <div className="max-w-[1440px] ">
-        <UserProfile profile={profile} />
+      <div className=" ">
+        <UserProfile profile={profile} onRefresh={handleRefresh} />
         <div className="summonersContainer grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-4 mt-4 items-start">
           <div className="rounded-lg p-3 self-start">
-            {/* <PlayerInfo summoner={summoner} account={account} rank={rank} /> */}
             <PlayerInfo ranks={ranks} highest={highest} summary={summary} />
           </div>
 
-          {/* 오른쪽: 매치 카드 리스트 */}
           <div className="min-h-screen">
             <PlayerMatchInfo matches={matches} puuid={profile.puuid} />
           </div>

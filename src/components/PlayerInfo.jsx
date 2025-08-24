@@ -51,6 +51,7 @@ function PlayerInfo({ ranks, highest }) {
           </div>
         </div>
       </div>
+      <div className="flex flex-col md:flex-row gap-4">{/* 포지션별 */}</div>
     </div>
   );
 }
