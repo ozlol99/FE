@@ -69,7 +69,7 @@ export default function AddRiotModal({ onClose, onSubmit }) {
               <input
                 value={form.game_name}
                 onChange={handle('game_name')}
-                placeholder="예: Hide on bush"
+                placeholder="예: Riot NickName"
                 className="w-full rounded-xl text-white bg-[#3A3A3A] border border-[#575757] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50"
               />
             </label>
