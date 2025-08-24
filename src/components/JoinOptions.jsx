@@ -14,7 +14,7 @@ function mapPayloadToAPI(payload) {
     use_discord: Boolean(payload.options.discord), // boolean
     mic_required: Boolean(payload.options.mic), // boolean
     listen_only_allowed: Boolean(payload.options.listenOnly), // boolean
-    riot_account_id: Number(payload.riotTag) || 0,
+    riot_account_id: payload.riotTag,
     position: payload.myPositions[0] || 'top', // string (null 말고 기본값)
     hashtags: Array.isArray(payload.lookingFor) ? payload.lookingFor : [], // string[]
   };
