@@ -100,7 +100,7 @@ function NavBar({ isLogin, onLogout, loading }) {
         {showSearch && <NavSearchBar />}
       </div>
 
-      <div className="flex h-full ml-auto gap-2 items-center">
+      <div className="flex h-full ml-auto gap-2">
         {/* 로딩 중이면 깜빡임 방지용으로 비워둠 */}
         {!loading && (
           <>
