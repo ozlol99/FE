@@ -84,14 +84,14 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await API.delete('/user/logout');
+      await API.delete('/user/logout'); // 이 부분이 성공해야
       console.info('[auth] 로그아웃 완료');
+      setUser(null); // 클라이언트 상태를 초기화
+      setTokens({ accessOk: false, refreshOk: false, lastError: null });
     } catch (error) {
       console.error('[auth] 로그아웃 API 실패:', error);
-      // API 실패해도 클라이언트에서는 로그아웃 처리
-    } finally {
-      setUser(null);
-      setTokens({ accessOk: false, refreshOk: false, lastError: null });
+      // API 실패 시 사용자에게 알림
+      alert('로그아웃에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
