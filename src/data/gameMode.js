@@ -18,7 +18,7 @@ export const gameModes = [
 
   {
     id: 2,
-    type: 'solo',
+    type: 'solo_lank',
     title: 'Duo',
     subtitle: '개인 / 듀오 랭크',
     color: 'from-pink-600 to-pink-950',
