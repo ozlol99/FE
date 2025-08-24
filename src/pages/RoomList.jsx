@@ -138,7 +138,7 @@ export default function RoomList({ queues }) {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include', // ✅ 쿠키 포함
       body: JSON.stringify({
-        riot_account_id: payload.riotTag,
+        riot_account_id: Number(payload.riotTag) || 0,
         position: payload.myPositions[0],
       }),
     })
