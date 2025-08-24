@@ -37,9 +37,7 @@ export default function RoomList({ queues }) {
     const fetchRooms = async () => {
       try {
         const res = await fetch('https://api.lol99.kro.kr/chat/rooms', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
+          credentials: 'include', // ✅ 쿠키 포함
         });
         if (!res.ok) throw new Error('방 목록 불러오기 실패');
         const data = await res.json();
@@ -57,13 +55,11 @@ export default function RoomList({ queues }) {
     const fetchRiotAccounts = async () => {
       try {
         const res = await fetch('https://api.lol99.kro.kr/user/riot-accounts', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
+          credentials: 'include', // ✅ 쿠키 포함
         });
         if (!res.ok) throw new Error('계정 불러오기 실패');
         const data = await res.json();
-        console.log('✅ 연동된 라이엇 계정:', data);
+        console.log('연동된 라이엇 계정:', data);
 
         setRiotTags(
           data.map((acc) => ({
@@ -78,10 +74,9 @@ export default function RoomList({ queues }) {
     fetchRiotAccounts();
   }, []);
 
-  // ✅ WebSocket 연결 (순수 WebSocket)
+  // WebSocket 연결 (순수 WebSocket)
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    const ws = new WebSocket(`wss://api.lol99.kro.kr/chat/ws?token=${token}`);
+    const ws = new WebSocket(`wss://api.lol99.kro.kr/chat/ws`); // 토큰 필요 없는 경우
     wsRef.current = ws;
 
     ws.onopen = () => console.log('🔌 WebSocket 연결 성공');
@@ -91,7 +86,7 @@ export default function RoomList({ queues }) {
     ws.onmessage = (event) => {
       try {
         const msg = JSON.parse(event.data);
-        console.log('📩 WS 이벤트 수신:', msg);
+        console.log('WS 이벤트 수신:', msg);
 
         switch (msg.type) {
           case 'room_created':
@@ -140,10 +135,8 @@ export default function RoomList({ queues }) {
 
     fetch(`https://api.lol99.kro.kr/chat/rooms/${joinTargetRoom.id}/join`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // ✅ 쿠키 포함
       body: JSON.stringify({
         riot_account_id: payload.riotTag,
         position: payload.myPositions[0],
