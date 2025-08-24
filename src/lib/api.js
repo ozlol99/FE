@@ -1,12 +1,11 @@
-// src/lib/api.js
+// src/lib/api.js (수정된 부분)
 import axios from 'axios';
 
 export const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE, // 예: https://api.lol99.kro.kr
+  baseURL: import.meta.env.VITE_API_BASE,
   withCredentials: true,
 });
 
-// CSRF 쿠키 읽기
 function getCookie(name) {
   return (
     document.cookie
@@ -26,17 +25,29 @@ API.interceptors.request.use((config) => {
     (config.method || 'get').toLowerCase() === 'post';
 
   if (isRefresh) {
+    // 실제 백엔드에서 사용하는 CSRF 쿠키 이름을 확인해서 수정
+    // 일단 일반적인 이름들로 시도해보기
     const csrf =
-      getCookie('csrf_refresh_token') || getCookie('XSRF-TOKEN') || '';
+      getCookie('csrftoken') ||
+      getCookie('XSRF-TOKEN') ||
+      getCookie('_csrf') ||
+      getCookie('csrf_token') ||
+      '';
+
     if (csrf) {
       config.headers = config.headers || {};
+      // 백엔드에서 기대하는 헤더 이름도 확인 필요
       config.headers['X-CSRF-TOKEN'] = csrf;
+      // 또는 config.headers['X-CSRFToken'] = csrf;
+      // 또는 config.headers['X-XSRF-TOKEN'] = csrf;
     }
+
+    console.log('[api] refresh 요청에 CSRF 토큰 추가:', csrf ? '있음' : '없음');
   }
   return config;
 });
 
-// 응답 인터셉터: 401 시 자동 토큰 갱신
+// 응답 인터셉터는 그대로...
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -48,13 +59,11 @@ API.interceptors.response.use(
 
     const status = error.response.status;
 
-    // 이미 재시도했거나 refresh 요청 자체면 패스
     if (original._retry || original.url?.endsWith('/user/token/refresh')) {
       return Promise.reject(error);
     }
 
     if (status === 401) {
-      // 이미 refresh 진행 중이면 대기
       if (refreshing) {
         await new Promise((resolve) => waiters.push(resolve));
         original._retry = true;
@@ -68,7 +77,6 @@ API.interceptors.response.use(
         await API.post('/user/token/refresh');
         console.info('[api] refresh 성공 → 원래 요청 재시도');
 
-        // 대기 중인 요청들 재개
         waiters.forEach((resolve) => resolve());
         waiters = [];
 
@@ -77,12 +85,8 @@ API.interceptors.response.use(
       } catch (refreshError) {
         console.error('[api] refresh 실패:', refreshError?.response?.status);
 
-        // 대기열 정리
         waiters.forEach((resolve) => resolve());
         waiters = [];
-
-        // refresh 실패 시 필요하면 로그아웃 처리
-        // 하지만 AuthContext에서 이미 처리하므로 여기서는 하지 않음
 
         return Promise.reject(refreshError);
       } finally {
