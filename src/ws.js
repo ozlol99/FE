@@ -6,7 +6,7 @@ export async function joinRoomAndConnect(roomId, riotAccountId, position) {
   try {
     // 1. REST API로 방 참가
     const res = await fetch(
-      `http://api.lol99.kro.kr/chat/rooms/${roomId}/join`,
+      `https://api.lol99.kro.kr/chat/rooms/${roomId}/join`,
       {
         method: 'POST',
         headers: {
