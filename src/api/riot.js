@@ -98,7 +98,7 @@ import axios from 'axios';
 // }
 
 // 백엔드 라이엇 api 호출
-// const API = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE;
+
 const API = import.meta.env.VITE_API_BASE;
 
 export async function getSummonerInfo(name, tag) {
