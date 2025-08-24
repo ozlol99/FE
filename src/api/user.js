@@ -3,7 +3,7 @@ import axios from 'axios';
 const BASE_URL = 'https://api.lol99.kro.kr'; // 실제 API 주소
 const api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true, // 쿠키 인증 쓴다면 true
+  withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
 });
 
