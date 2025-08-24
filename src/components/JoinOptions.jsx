@@ -43,7 +43,13 @@ export default function JoinOptions({
   const isHost = mode === 'host' || mode === 'edit';
 
   // 🔹 상태값 관리
-  const [riotTag, setRiotTag] = useState(defaultRiotTag || riotTags[0] || '');
+  const [riotTag, setRiotTag] = useState(
+    defaultRiotTag
+      ? Number(defaultRiotTag)
+      : riotTags.length > 0
+        ? Number(riotTags[0].id)
+        : 0,
+  );
   const [title, setTitle] = useState(defaultTitle);
   const [queue, setQueue] = useState(defaultQueue);
   const [myPos, setMyPos] = useState(() => new Set(defaultMyPositions));
