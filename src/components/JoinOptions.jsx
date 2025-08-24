@@ -30,7 +30,7 @@ export default function JoinOptions({
   riotTags = [],
   defaultRiotTag = '',
   defaultTitle = '',
-  defaultQueue = 'solo',
+  defaultQueue = 'solo_lank',
   defaultMyPositions = [],
   defaultLookingFor = [],
   defaultDiscord = false,

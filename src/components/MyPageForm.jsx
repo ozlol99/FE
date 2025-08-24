@@ -49,7 +49,7 @@ export default function MyPageForm({
               aria-label="라이엇 계정 추가"
               className="relative inline-flex items-center justify-center w-10 h-10
                           focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/70
-                          transition-transform hover:scale-110 active:scale-95"
+                          transition-transform hover:scale-110 active:scale-95 cursor-pointer"
             >
               <Plus
                 className="w-6 h-6 drop-shadow-[0_0_10px_rgba(34,193,163,0.85)] cursor-pointer"
