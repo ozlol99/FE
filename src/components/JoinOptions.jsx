@@ -14,7 +14,7 @@ function mapPayloadToAPI(payload) {
     use_discord: Boolean(payload.options.discord), // boolean
     mic_required: Boolean(payload.options.mic), // boolean
     listen_only_allowed: Boolean(payload.options.listenOnly), // boolean
-    riot_account_id: Number(payload.riotTag) || 0, // number (반드시 Number)
+    riot_account_id: Number(payload.riotTag) || 0,
     position: payload.myPositions[0] || 'top', // string (null 말고 기본값)
     hashtags: Array.isArray(payload.lookingFor) ? payload.lookingFor : [], // string[]
   };
@@ -44,11 +44,7 @@ export default function JoinOptions({
 
   // 🔹 상태값 관리
   const [riotTag, setRiotTag] = useState(
-    defaultRiotTag
-      ? Number(defaultRiotTag)
-      : riotTags.length > 0
-        ? Number(riotTags[0].id)
-        : 0,
+    defaultRiotTag || riotTags[0]?.id || '',
   );
   const [title, setTitle] = useState(defaultTitle);
   const [queue, setQueue] = useState(defaultQueue);

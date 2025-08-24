@@ -89,16 +89,16 @@ export default function JoinOptionsContent({
           <div className="md:col-span-4 lg:col-span-3">
             <select
               value={riotTag}
-              onChange={(e) => onChangeRiotTag(Number(e.target.value))}
+              onChange={(e) => onChangeRiotTag(e.target.value)} // ❌ Number(...) 강제하지 말고 원래대로 돌림
             >
               {riotTags?.length ? (
                 riotTags.map((acc) => (
                   <option key={acc.id} value={acc.id}>
-                    {acc.game_name}#{acc.tag_line} {/* 보여주기용 */}
+                    {acc.game_name}#{acc.tag_line}
                   </option>
                 ))
               ) : (
-                <option value={0}>연동된 태그 없음</option>
+                <option value="">연동된 태그 없음</option>
               )}
             </select>
           </div>
