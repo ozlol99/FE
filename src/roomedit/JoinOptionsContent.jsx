@@ -40,27 +40,22 @@ export default function JoinOptionsContent({
   // 제출
   onSubmit,
 }) {
-  // 🔹 API 요청 스펙에 맞게 payload 변환
-  const buildApiPayload = () => {
-    return {
-      name: title, // 방 제목
-      max_members: capacity, // 최대 인원
-      queue_type: queue, // 큐 타입
-      use_discord: discord, // 디스코드 여부
-      mic_required: mic, // 마이크 필수 여부
-      listen_only_allowed: listenOnly, // 듣기만 허용
-      riot_account_id: riotTag, // 선택된 라이엇 계정 (id)
-      position: Array.from(myPos)[0] || null, // 내 포지션 (단일)
-      hashtags: Array.from(lookingPos ?? []), // 찾는 포지션 배열
-    };
-  };
-
   // 🔹 등록 시 처리
   const handleSubmit = () => {
-    const apiPayload = buildApiPayload();
-    console.log('📦 최종 API Payload:', apiPayload);
+    const payload = {
+      title,
+      capacity,
+      queue,
+      discord,
+      mic,
+      listenOnly,
+      riotTag,
+      myPos: Array.from(myPos),
+      lookingFor: Array.from(lookingPos ?? []),
+    };
 
-    onSubmit(apiPayload); // 부모에서 fetch 실행
+    console.log('📦 최종 Payload (원본):', payload);
+    onSubmit(payload); // 부모에서 변환 및 fetch 실행
   };
 
   const isLocked = (k) => Boolean(locks?.[k]);
@@ -95,16 +90,15 @@ export default function JoinOptionsContent({
             <select
               value={riotTag}
               onChange={(e) => onChangeRiotTag(Number(e.target.value))}
-              className={clsField}
             >
               {riotTags?.length ? (
                 riotTags.map((acc) => (
-                  <option key={acc.id} value={Number(acc.id)}>
-                    {acc.tag}
+                  <option key={acc.id} value={acc.id}>
+                    {acc.game_name}#{acc.tag_line} {/* 보여주기용 */}
                   </option>
                 ))
               ) : (
-                <option value="">연동된 태그 없음</option>
+                <option value={0}>연동된 태그 없음</option>
               )}
             </select>
           </div>
