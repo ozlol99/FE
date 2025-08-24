@@ -16,7 +16,7 @@ export default function RoomPage() {
     const fetchRoom = async () => {
       try {
         const res = await fetch(
-          `http://api.lol99.kro.kr/chat/rooms/${room_id}`,
+          `https://api.lol99.kro.kr/chat/rooms/${room_id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

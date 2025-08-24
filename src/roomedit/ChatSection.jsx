@@ -128,7 +128,7 @@ export default function ChatSection({
       if (role === 'host') {
         // ✅ 방장 → 방 삭제
         const res = await fetch(
-          `http://api.lol99.kro.kr/chat/rooms/${roomId}`,
+          `https://api.lol99.kro.kr/chat/rooms/${roomId}`,
           {
             method: 'DELETE',
             headers: {
@@ -141,7 +141,7 @@ export default function ChatSection({
       } else {
         // ✅ 게스트 → 방 퇴장
         const res = await fetch(
-          `http://api.lol99.kro.kr/chat/rooms/${roomId}/leave`,
+          `https://api.lol99.kro.kr/chat/rooms/${roomId}/leave`,
           {
             method: 'POST',
             headers: {

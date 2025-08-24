@@ -98,7 +98,7 @@ import CustomInput from '@/components/CustomInput';
 import GenderToggle from '@/components/ToggleButton';
 
 // const API_BASE = import.meta.env.VITE_API_BASE || 'http://api.lol99.kro.kr';
-const API_BASE = 'http://3.34.53.80:8000';
+const API_BASE = 'https://3.34.53.80:8000';
 
 const ADD_INFO_ENDPOINT = `${API_BASE}/user/register`;
 
