@@ -46,12 +46,15 @@ export default function JoinOptionsContent({
       title,
       capacity,
       queue,
-      discord,
-      mic,
-      listenOnly,
       riotTag,
       myPos: Array.from(myPos),
       lookingFor: Array.from(lookingPos ?? []),
+      options: {
+        // 객체로 묶기
+        discord,
+        mic,
+        listenOnly,
+      },
     };
 
     console.log('📦 최종 Payload (원본):', payload);
@@ -89,14 +92,12 @@ export default function JoinOptionsContent({
           <div className="md:col-span-4 lg:col-span-3">
             <select
               value={riotTag}
-              className={clsField}
               onChange={(e) => onChangeRiotTag(e.target.value)} // ❌ Number(...) 강제하지 말고 원래대로 돌림
-
             >
               {riotTags?.length ? (
                 riotTags.map((acc) => (
                   <option key={acc.id} value={acc.id}>
-                    {acc.game_name}#{acc.tag_line} {/* ✅ 원래 형태로 */}
+                    {acc.game_name}#{acc.tag_line}
                   </option>
                 ))
               ) : (

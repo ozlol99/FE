@@ -8,8 +8,8 @@ export const POSITIONS = [
   { key: 'top', label: '탑', icon: topIcon },
   { key: 'jungle', label: '정글', icon: jungleIcon },
   { key: 'mid', label: '미드', icon: midIcon },
-  { key: 'bottom', label: '바텀', icon: bottomIcon },
-  { key: 'support', label: '서폿', icon: supportIcon },
+  { key: 'adc', label: '바텀', icon: bottomIcon },
+  { key: 'sup', label: '서폿', icon: supportIcon },
 ];
 
 export const QUEUES = [
