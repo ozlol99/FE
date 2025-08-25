@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// import { API } from '@/lib/api';
 const BASE_URL = 'https://api.lol99.kro.kr'; // 실제 API 주소
 const api = axios.create({
   baseURL: BASE_URL,

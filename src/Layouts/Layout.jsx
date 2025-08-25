@@ -30,7 +30,7 @@ export default function Layout() {
     try {
       await logout(); // 서버 /user/logout 호출 + 컨텍스트 비우기
     } finally {
-      navigate('/login', { replace: true });
+      navigate('/', { replace: true });
     }
   };
 
