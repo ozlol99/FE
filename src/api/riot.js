@@ -100,6 +100,9 @@ import axios from 'axios';
 // 백엔드 라이엇 api 호출
 
 const API = import.meta.env.VITE_API_BASE;
+// const PLATFORM = 'kr';
+// const API_BASE = `https://${PLATFORM}.api.riotgames.com`;
+// const KEY = import.meta.env.VITE_RIOT_API_KEY;
 
 export async function getSummonerInfo(name, tag) {
   const encodeName = encodeURIComponent(name);
@@ -124,4 +127,111 @@ export async function rtSearch(name, tag) {
   const url = `${API}/riot/rtSearch?${params.toString()}`;
   const { data } = await axios.get(url, { withCredentials: true });
   return data;
+}
+
+//랭킹 roit api
+const RETRY = 2; // 504/429 때 재시도 횟수
+const GAP_MS = 250; // 재시도 간격
+
+const ok = (r) => r && r.ok;
+
+async function fetchWithRetry(path, attempts = RETRY) {
+  for (let i = 0; i <= attempts; i++) {
+    try {
+      const res = await fetch(path); // /riot/... 프록시 사용
+      if (ok(res)) return res.json();
+
+      // 504, 429(레이트리밋)만 재시도, 나머지는 그대로 에러
+      if (![429, 504].includes(res.status)) {
+        const t = await res.text().catch(() => '');
+        throw new Error(`Riot ${res.status}: ${t || path}`);
+      }
+    } catch (e) {
+      if (i === attempts) throw e;
+    }
+    // 백오프
+    await new Promise((r) => setTimeout(r, GAP_MS * (i + 1)));
+  }
+}
+
+export async function getChallenger(queue) {
+  return fetchWithRetry(
+    `/riot/lol/league/v4/challengerleagues/by-queue/${queue}`,
+  );
+}
+export async function getGrandmaster(queue) {
+  return fetchWithRetry(
+    `/riot/lol/league/v4/grandmasterleagues/by-queue/${queue}`,
+  );
+}
+export async function getMaster(queue) {
+  return fetchWithRetry(`/riot/lol/league/v4/masterleagues/by-queue/${queue}`);
+}
+
+/** 챌/그마/마스터 합쳐서 LP 내림차순, 일부 실패해도 가능한 것만 합침 */
+export async function getTopLeagueEntries(queue, limit = 100) {
+  const results = await Promise.allSettled([
+    getChallenger(queue),
+    // getGrandmaster(queue),
+    // getMaster(queue),
+  ]);
+
+  const okJsons = results
+    .filter((r) => r.status === 'fulfilled')
+    .map((r) => r.value);
+
+  // 전부 실패하면 에러
+  if (!okJsons.length) {
+    const reasons = results
+      .filter((r) => r.status === 'rejected')
+      .map((r) => r.reason?.message || r.reason);
+    throw new Error(`Riot fetch failed: ${reasons.join(' | ')}`);
+  }
+
+  const all = okJsons.flatMap((j) =>
+    (j.entries || []).map((e) => ({ ...e, tier: j.tier })),
+  );
+
+  all.sort((a, b) => b.leaguePoints - a.leaguePoints);
+  return all.slice(0, limit);
+}
+
+export async function getSummonerById(encSummonerId) {
+  if (!encSummonerId) {
+    console.warn('getSummonerById: encSummonerId is empty');
+    throw new Error('summonerId missing');
+  }
+  const url = `/riot/lol/summoner/v4/summoners/${encodeURIComponent(encSummonerId)}`;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) {
+      const t = await r.text().catch(() => '');
+      console.error('SummonerV4 fail', r.status, url, t);
+      throw new Error(`SummonerV4 ${r.status}`);
+    }
+    return r.json(); // { name, puuid, summonerLevel, ... }
+  } catch (e) {
+    console.error('getSummonerById error:', e);
+    throw e;
+  }
+}
+
+export async function getAccountByPuuid(puuid) {
+  if (!puuid) {
+    console.warn('getAccountByPuuid: puuid is empty');
+    throw new Error('puuid missing');
+  }
+  const url = `/asia/riot/account/v1/accounts/by-puuid/${encodeURIComponent(puuid)}`;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) {
+      const t = await r.text().catch(() => '');
+      console.error('AccountV1 fail', r.status, url, t);
+      throw new Error(`AccountV1 ${r.status}`);
+    }
+    return r.json(); // { gameName, tagLine }
+  } catch (e) {
+    console.error('getAccountByPuuid error:', e);
+    throw e;
+  }
 }
