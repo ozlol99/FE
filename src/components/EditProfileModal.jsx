@@ -34,7 +34,7 @@ export default function EditProfileModal({ initial, onClose, onUpdated }) {
     };
 
     try {
-      if (typeof updateMe === 'function') {
+      if (typeof updateUserMe === 'function') {
         await updateUserMe(payload);
       } else {
         const res = await fetch(

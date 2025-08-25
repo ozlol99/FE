@@ -115,3 +115,13 @@ export async function getSummonerInfo(name, tag) {
     throw err;
   }
 }
+
+export async function rtSearch(name, tag) {
+  const params = new URLSearchParams();
+  if (name) params.set('summoner_name', name);
+  if (tag) params.set('tag_line', tag);
+
+  const url = `${API}/riot/rtSearch?${params.toString()}`;
+  const { data } = await axios.get(url, { withCredentials: true });
+  return data;
+}
