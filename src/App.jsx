@@ -109,8 +109,6 @@ export default function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/room/:room_id" element={<RoomPage />} />
-        {/* <Route path="/oauth/callback" element={<OAuthCallback />} />
-        <Route path="/kakao-login" element={<OAuthCallback />} /> */}
       </Routes>
     </AuthProvider>
   );

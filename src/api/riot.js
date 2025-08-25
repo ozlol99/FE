@@ -1,105 +1,10 @@
 import axios from 'axios';
 
-// const RIOT_API_KEY = import.meta.env.VITE_RIOT_API_KEY;
-// const KR_URL = 'https://kr.api.riotgames.com';
-// const ASIA_URL = 'https://asia.api.riotgames.com';
-
-// // 사용자 닉네임 태그 정보 api
-// export async function getAccountByRiotId(gameName, tagLine) {
-//   const url = `${ASIA_URL}/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(gameName)}/${encodeURIComponent(tagLine)}`;
-//   try {
-//     const { data } = await axios.get(url, {
-//       headers: { 'X-Riot-Token': RIOT_API_KEY },
-//     });
-//     console.log('account:', data);
-//     return data;
-//   } catch (error) {
-//     console.error(
-//       `Riot API 호출 실패 (Account - ${gameName}#${tagLine}):`,
-//       error.response?.data || error.message,
-//     );
-//     throw error;
-//   }
-// }
-
-// // 사용자 프로필이미지, 레벨정보
-// export async function getSummonerByPuuid(puuid) {
-//   const url = `${KR_URL}/lol/summoner/v4/summoners/by-puuid/${encodeURIComponent(puuid)}`;
-//   try {
-//     const { data } = await axios.get(url, {
-//       headers: { 'X-Riot-Token': RIOT_API_KEY },
-//     });
-//     console.log('summoner:', data);
-//     return data;
-//   } catch (error) {
-//     console.error(
-//       `Riot API 호출 실패 (Summoner - PUUID: ${puuid}):`,
-//       error.response?.data || error.message,
-//     );
-//     throw error;
-//   }
-// }
-
-// //사용자 티어
-// export async function getLeagueByPuuid(puuid) {
-//   const url = `${KR_URL}/lol/league/v4/entries/by-puuid/${encodeURIComponent(puuid)}`;
-//   try {
-//     const { data } = await axios.get(url, {
-//       headers: { 'X-Riot-Token': RIOT_API_KEY },
-//     });
-//     console.log('league:', data);
-//     return data;
-//   } catch (error) {
-//     console.error(
-//       `Riot API 호출 실패 (League - PUUID: ${puuid}):`,
-//       error.response?.data || error.message,
-//     );
-//     throw error;
-//   }
-// }
-
-// // 최근 매치 ID 목록 //
-// export async function getRecentMatchIds(puuid, count = 2) {
-//   // 주의: 경로에 riot-asia 같은 prefix 없음
-//   const url = `${ASIA_URL}/lol/match/v5/matches/by-puuid/${encodeURIComponent(puuid)}/ids?start=0&count=${count}`;
-//   try {
-//     const { data } = await axios.get(url, {
-//       headers: { 'X-Riot-Token': RIOT_API_KEY },
-//     });
-//     // data: [ "KR_...", "KR_...", ... ]
-//     console.log('match id:', data);
-//     return data;
-//   } catch (error) {
-//     console.error(
-//       `Riot API 실패 (Match IDs - PUUID: ${puuid}):`,
-//       error.response?.data || error.message,
-//     );
-//     throw error;
-//   }
-// }
-
-// // 매치 ID로 상세 가져오기 //
-// export async function getMatchById(matchId) {
-//   const url = `${ASIA_URL}/lol/match/v5/matches/${encodeURIComponent(matchId)}`;
-//   try {
-//     const { data } = await axios.get(url, {
-//       headers: { 'X-Riot-Token': RIOT_API_KEY },
-//     });
-//     // data: { metadata: { matchId, participants: [...] }, info: { participants: [...], ... } }
-//     console.log('metadata:', data);
-//     return data;
-//   } catch (error) {
-//     console.error(
-//       `Riot API 실패 (Match - ID: ${matchId}):`,
-//       error.response?.data || error.message,
-//     );
-//     throw error;
-//   }
-// }
-
 // 백엔드 라이엇 api 호출
-
 const API = import.meta.env.VITE_API_BASE;
+const KR = 'https://kr.api.riotgames.com';
+const ASIA = 'https://asia.api.riotgames.com';
+const KEY = import.meta.env.VITE_RIOT_API_KEY;
 
 export async function getSummonerInfo(name, tag) {
   const encodeName = encodeURIComponent(name);
@@ -114,4 +19,54 @@ export async function getSummonerInfo(name, tag) {
     console.error('summoner-info 실패:', err);
     throw err;
   }
+}
+
+export async function rtSearch(name, tag) {
+  const params = new URLSearchParams();
+  if (name) params.set('summoner_name', name);
+  if (tag) params.set('tag_line', tag);
+
+  const url = `${API}/riot/rtSearch?${params.toString()}`;
+  const { data } = await axios.get(url, { withCredentials: true });
+  return data;
+}
+
+// 요청 많을 시 라이엇 호출 불가능으로 재호출
+// 아주 가벼운 레이트리미터
+let last = 0;
+const MIN_DELAY_MS = 250;
+async function rateWait() {
+  const now = Date.now();
+  const wait = Math.max(0, MIN_DELAY_MS - (now - last));
+  if (wait) await new Promise((r) => setTimeout(r, wait));
+  last = Date.now();
+}
+
+async function fetchJson(url, retry = 2) {
+  if (!KEY) throw new Error('VITE_RIOT_API_KEY가 없습니다.');
+  await rateWait();
+
+  const res = await fetch(url, { headers: { 'X-Riot-Token': KEY } });
+
+  if ((res.status === 429 || res.status >= 500) && retry > 0) {
+    const ra = res.headers.get('Retry-After');
+    const ms = ra ? Number(ra) * 1000 : 1200;
+    await new Promise((r) => setTimeout(r, ms));
+    return fetchJson(url, retry - 1);
+  }
+  if (!res.ok) {
+    const t = await res.text().catch(() => '');
+    throw new Error(`[${res.status}] ${url} :: ${t.slice(0, 120)}`);
+  }
+  return res.json();
+}
+
+export async function getChallenger(queue = 'RANKED_SOLO_5x5') {
+  const url = `${KR}/lol/league/v4/challengerleagues/by-queue/${encodeURIComponent(queue)}`;
+  return fetchJson(url);
+}
+
+export async function getAccountByPuuid(puuid) {
+  const url = `${ASIA}/riot/account/v1/accounts/by-puuid/${encodeURIComponent(puuid)}`;
+  return fetchJson(url);
 }

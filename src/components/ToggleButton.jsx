@@ -2,8 +2,8 @@ import React, { memo } from 'react';
 
 function ToggleButton({ value, onChange, name = 'gender', disabled = false }) {
   const options = [
-    { label: '남', val: false },
-    { label: '여', val: true },
+    { label: '남', val: true },
+    { label: '여', val: false },
   ];
 
   return (
