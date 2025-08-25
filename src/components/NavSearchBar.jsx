@@ -2,14 +2,27 @@ import { useNavigate } from 'react-router-dom';
 import { SearchIcon } from 'lucide-react';
 import { rtSearch } from '@/api/riot';
 import { useDebounce } from '@/hooks/useDebounce';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function NavSearchBar() {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 400); // 입력 끝나고 0.4초 후 반영
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const wrapRef = useRef(null);
+
+  useEffect(() => {
+    const onDown = (e) => {
+      if (!wrapRef.current) return;
+      if (!wrapRef.current.contains(e.target)) {
+        setResults([]);
+      }
+    };
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, []);
 
   useEffect(() => {
     const raw = debouncedQuery.trim();
@@ -19,11 +32,15 @@ function NavSearchBar() {
     }
 
     const [name, tag] = raw.split('#');
+    let alive = true;
     (async () => {
       try {
         setLoading(true);
         const data = await rtSearch(name, tag);
-        setResults(Array.isArray(data) ? data : data ? [data] : []);
+        const arr = Array.isArray(data) ? data : data ? [data] : [];
+        if (!alive) return;
+        setResults(arr);
+        setOpen(true);
       } catch (err) {
         console.error(err);
         setResults([]);
@@ -35,6 +52,9 @@ function NavSearchBar() {
 
   const go = (name, tag) => {
     if (!name || !tag) return;
+    setOpen(false);
+    setResults([]);
+    setQuery('');
     navigate(
       `/match-detail/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`,
     );
@@ -46,12 +66,13 @@ function NavSearchBar() {
   };
 
   return (
-    <div className="relative">
+    <div ref={wrapRef} className="relative">
       <div className="flex items-center w-[500px] h-[40px] bg-[#D9D9D9] rounded-4xl border-2">
         <input
           className="flex-1 h-full px-4 bg-transparent outline-none text-black font-medium text-sm"
           placeholder="소환사 검색 (예: 이상호93#KR1)"
           value={query}
+          onFocus={() => setOpen(true)}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSearch();
@@ -64,8 +85,7 @@ function NavSearchBar() {
           <SearchIcon />
         </button>
       </div>
-
-      {(loading || results.length > 0) && (
+      {open && (loading || results.length > 0) && (
         <div className="absolute left-0 mt-1 w-[500px] rounded-xl bg-black/95 shadow-xl border z-50">
           {loading && (
             <div className="p-3 text-sm text-stone-500">검색 중…</div>
